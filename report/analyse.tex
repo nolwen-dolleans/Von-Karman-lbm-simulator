@@ -1,0 +1,10 @@
+Le code originale se structure comme suit:
+\begin{enumerate}
+	\item Une phase d'initialisation.
+	\item Envoie des cellules fantômes.
+	\item Calcul de la vitesse des particules fluides et de la densité de ce dernier en tous points.
+	\item Actualisation de la position du fluide.
+	\item Envoie des cellules fantômes.
+	\item ...
+\end{enumerate}
+De ce fait, nous pouvons extraire 2 grands axes d'optimisation: S'assurer que l'envoie de message est optimal ainsi que celui du calcul. 

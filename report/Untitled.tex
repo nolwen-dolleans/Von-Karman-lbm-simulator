@@ -1,0 +1,221 @@
+% ============================================================
+%  TEMPLATE ARTICLE DE RECHERCHE
+%  Compatible avec pdfLaTeX / XeLaTeX / LuaLaTeX
+% ============================================================
+
+\documentclass[12pt, a4paper, twocolumn]{article}
+
+% -----------------------------------------------------------
+% PACKAGES ESSENTIELS
+% -----------------------------------------------------------
+\usepackage[utf8]{inputenc}          % Encodage UTF-8
+\usepackage[T1]{fontenc}             % Encodage des polices
+\usepackage[french]{babel}           % Langue française
+\usepackage{lmodern}                 % Police Latin Modern
+
+% Mise en page
+\usepackage[
+  top=2.5cm, bottom=2.5cm,
+  left=2cm,  right=2cm,
+  columnsep=0.8cm
+]{geometry}
+
+% Typographie & apparence
+\usepackage{microtype}               % Amélioration microtypographique
+\usepackage{setspace}                % Espacement des lignes
+\usepackage{parskip}                 % Espacement entre paragraphes
+\usepackage{titlesec}                % Personnalisation des titres
+\usepackage{abstract}                % Personnalisation du résumé
+\usepackage{fancyhdr}                % En-têtes et pieds de page
+
+% Mathématiques
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+
+% Figures & tableaux
+\usepackage{graphicx}                % Inclusion d'images
+\usepackage{float}                   % Placement précis des figures
+\usepackage{booktabs}                % Tableaux professionnels
+\usepackage{caption}                 % Légendes personnalisées
+\usepackage{subcaption}              % Sous-figures
+
+% Couleurs
+\usepackage[dvipsnames]{xcolor}
+\definecolor{accentcolor}{RGB}{0, 75, 135}  % Bleu académique
+
+% Hyperliens & références
+\usepackage[
+  colorlinks=true,
+  linkcolor=accentcolor,
+  citecolor=accentcolor,
+  urlcolor=accentcolor,
+  pdftitle={Titre de l'article},
+  pdfauthor={Auteur(s)},
+]{hyperref}
+\usepackage[
+  backend=biber,
+  style=numeric,
+  sorting=none
+]{biblatex}                          % Bibliographie (nécessite biber)
+\addbibresource{references.bib}      % Fichier .bib
+
+% Divers
+\usepackage{lipsum}                  % Texte de remplacement (à supprimer)
+\usepackage{csquotes}                % Guillemets adaptés à la langue
+\usepackage{enumitem}                % Listes personnalisées
+
+% -----------------------------------------------------------
+% THÉORÈMES & DÉFINITIONS
+% -----------------------------------------------------------
+\newtheorem{theorem}{Théorème}[section]
+\newtheorem{lemma}[theorem]{Lemme}
+\newtheorem{corollary}[theorem]{Corollaire}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Définition}[section]
+\theoremstyle{remark}
+\newtheorem{remark}{Remarque}[section]
+
+% -----------------------------------------------------------
+% STYLE DES SECTIONS
+% -----------------------------------------------------------
+\titleformat{\section}
+  {\large\bfseries\color{accentcolor}}
+  {\thesection.}{0.5em}{}[\titlerule]
+
+\titleformat{\subsection}
+  {\normalsize\bfseries}
+  {\thesubsection.}{0.5em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\itshape}
+  {\thesubsubsection.}{0.5em}{}
+
+% -----------------------------------------------------------
+% EN-TÊTES & PIEDS DE PAGE
+% -----------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Nom de la revue / Conférence}}
+\fancyhead[R]{\small\textit{Auteur(s) — \the\year}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% -----------------------------------------------------------
+% STYLE DU RÉSUMÉ
+% -----------------------------------------------------------
+\renewcommand{\abstractnamefont}{\bfseries\color{accentcolor}}
+\setlength{\absleftindent}{0pt}
+\setlength{\absrightindent}{0pt}
+
+% -----------------------------------------------------------
+% MÉTADONNÉES DE L'ARTICLE
+% -----------------------------------------------------------
+\title{%
+  \vspace{-1.5cm}
+  {\large \textbf{Nom de la revue / Conférence}} \\[0.3em]
+  \rule{\linewidth}{0.5pt} \\[0.5em]
+  {\LARGE \textbf{Titre principal de l'article}} \\[0.2em]
+  {\large Sous-titre ou précision si nécessaire}
+}
+
+\author{%
+  \textbf{Prénom Nom\textsuperscript{1}} \quad
+  \textbf{Prénom Nom\textsuperscript{2}} \\[0.4em]
+  \small \textsuperscript{1}Laboratoire / Institution, Ville, Pays \\
+  \small \textsuperscript{2}Laboratoire / Institution, Ville, Pays \\[0.3em]
+  \small \href{mailto:auteur@institution.fr}{auteur@institution.fr}
+}
+
+\date{%
+  \small Soumis le : \today \quad | \quad Accepté le : JJ/MM/AAAA
+}
+
+% ============================================================
+%  DÉBUT DU DOCUMENT
+% ============================================================
+\begin{document}
+
+% ------- Page de titre ----------------------------------------
+\twocolumn[
+  \maketitle
+  \vspace{-0.5em}
+  \rule{\linewidth}{1.5pt}
+  \vspace{0.5em}
+
+  % ------- Résumé (sur toute la largeur) ----------------------
+  \begin{onecolabstract}
+    \textbf{Résumé —}
+    \input{resume.tex}
+    
+    \medskip
+    \textbf{Mots-clés :} mot-clé 1 ; mot-clé 2 ; mot-clé 3 ; mot-clé 4 ; mot-clé 5
+    
+    \bigskip
+    \textbf{Abstract —} \lipsum  % Traduction anglaise du résumé
+    
+    \medskip
+    \textbf{Keywords:} keyword 1; keyword 2; keyword 3; keyword 4; keyword 5
+  \end{onecolabstract}
+
+  \vspace{1em}
+  \rule{\linewidth}{1.5pt}
+  \vspace{1em}
+]
+
+% -----------------------------------------------------------
+% 1. INTRODUCTION
+% -----------------------------------------------------------
+\section{Introduction}
+
+\input{introduction.tex}
+
+
+%-----------------------------------------------------------
+% 2. Analyse du code initial
+% -----------------------------------------------------------
+\section{Analyse du code initial}
+
+\input{analyse.tex}
+% -----------------------------------------------------------
+% 3. MÉTHODOLOGIE 
+% -----------------------------------------------------------
+\section{Expériences}
+\input{experiences}
+% -----------------------------------------------------------
+% 4. Optimisations apportées
+% -----------------------------------------------------------
+\section{Optimisations apportées}
+\input{Optimisations.tex}
+
+% -----------------------------------------------------------
+% 5. RÉSULTATS
+% -----------------------------------------------------------
+\section{Résultats}
+\input{resultats.tex}
+
+% -----------------------------------------------------------
+% 6. CONCLUSION
+% -----------------------------------------------------------
+\section{Conclusion}
+\input{conclusion.tex}
+
+% -----------------------------------------------------------
+% BIBLIOGRAPHIE
+% -----------------------------------------------------------
+\printbibliography[title={Références}]
+
+% -----------------------------------------------------------
+% APPENDICES (optionnel)
+% -----------------------------------------------------------
+\appendix
+
+\section{Preuves complémentaires}
+
+\lipsum[15]
+
+\section{Détails d'implémentation}
+
+\lipsum[16]
+
+\end{document}

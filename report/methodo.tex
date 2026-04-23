@@ -1,0 +1,38 @@
+
+\subsection{Formalisation du problème}
+
+Soit $\mathcal{X} = \{x_1, x_2, \ldots, x_n\}$ l'ensemble des données d'entrée. 
+On cherche à minimiser la fonction objectif :
+
+\begin{equation}
+  \mathcal{L}(\theta) = \frac{1}{n} \sum_{i=1}^{n} \ell\bigl(f_\theta(x_i),\, y_i\bigr) + \lambda\,\Omega(\theta)
+  \label{eq:objectif}
+\end{equation}
+
+où $\lambda > 0$ est le paramètre de régularisation et $\Omega(\theta)$ est le terme de régularisation.
+
+\begin{theorem}[Convergence]
+  Sous les hypothèses suivantes : (i) ... ; (ii) ..., l'algorithme converge vers un minimum local en $O(1/\sqrt{T})$ itérations.
+\end{theorem}
+\begin{proof}
+  La preuve découle directement de l'application du lemme~\ref{lem:principal}.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:principal}
+  Si $f$ est $L$-lisse et $\mu$-fortement convexe, alors $\|\nabla f(x)\|^2 \geq 2\mu\,(f(x) - f^*)$.
+\end{lemma}
+
+\subsection{Architecture proposée}
+
+\lipsum[8]
+
+% Exemple de figure
+\begin{figure}[H]
+  \centering
+  % \includegraphics[width=\linewidth]{figures/architecture.pdf}
+  \fbox{\parbox{0.9\linewidth}{\centering\vspace{2cm} [Insérer la figure ici] \vspace{2cm}}}
+  \caption{Architecture du modèle proposé. Les blocs colorés représentent...}
+  \label{fig:architecture}
+\end{figure}
+

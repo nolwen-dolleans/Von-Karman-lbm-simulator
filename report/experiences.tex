@@ -1,0 +1,57 @@
+\subsection{Protocole expérimental}
+
+\lipsum[9]
+
+\subsubsection{Jeux de données}
+
+\lipsum[10]
+
+\subsubsection{Hyperparamètres}
+
+Les hyperparamètres utilisés sont récapitulés dans la Table~\ref{tab:hyperparams}.
+
+\begin{table}[H]
+  \centering
+  \caption{Hyperparamètres de la configuration expérimentale.}
+  \label{tab:hyperparams}
+  \begin{tabular}{lcc}
+    \toprule
+    \textbf{Paramètre} & \textbf{Valeur} & \textbf{Plage testée} \\
+    \midrule
+    Taux d'apprentissage & $10^{-3}$ & $[10^{-4}, 10^{-2}]$ \\
+    Taille du lot & 64         & $\{32, 64, 128\}$ \\
+    Époques          & 100        & — \\
+    Régularisation $\lambda$ & $10^{-4}$ & $[10^{-5}, 10^{-3}]$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Résultats}
+
+\lipsum[11]
+
+% Exemple de tableau de résultats comparatifs
+\begin{table}[H]
+  \centering
+  \caption{Comparaison des performances (\%) sur le jeu de test.}
+  \label{tab:resultats}
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Méthode} & \textbf{Précision} & \textbf{Rappel} & \textbf{F1} \\
+    \midrule
+    Méthode A \cite{exemple2024} & 82.3 & 79.1 & 80.7 \\
+    Méthode B & 85.6 & 83.2 & 84.4 \\
+    \textbf{Notre approche} & \textbf{89.1} & \textbf{87.5} & \textbf{88.3} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Analyse et discussion}
+
+\lipsum[12]
+
+\begin{remark}
+  Notons que les résultats présentés dans la Table~\ref{tab:resultats} ont été obtenus avec une validation croisée à 5 plis afin de garantir la robustesse statistique.
+\end{remark}
+
+% 
