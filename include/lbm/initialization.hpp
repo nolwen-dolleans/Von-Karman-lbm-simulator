@@ -18,7 +18,7 @@
 /// Where `w_i` is the direction weight.
 ///
 /// @param mesh Mesh to initialize.
-void init_cond_velocity_0_density_1(Mesh* mesh);
+// void init_cond_velocity_0_density_1(Mesh* mesh);
 
 /// @brief Initialization of the obstacle.
 ///
