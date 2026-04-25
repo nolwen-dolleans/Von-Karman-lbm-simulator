@@ -5,7 +5,7 @@
 
 #include <omp.h>
 
-#include <lbm/communications.hpp>
+// #include <lbm/communications.hpp>
 #include <lbm/config.hpp>
 #include <lbm/structures.hpp>
 
@@ -178,8 +178,8 @@ void compute_outflow_zou_he_const_density(lbm_mesh_cell_t cell) {
 
 void special_cells(Mesh* mesh, lbm_mesh_type_t* mesh_type, const lbm_comm_t* mesh_comm) {
   // Loop on all inner cells
-  for (size_t i = 1; i < mesh->width - 1; i++) {
-    for (size_t j = 1; j < mesh->height - 1; j++) {
+  for (size_t j = 1; j < mesh->height - 1; j++) {
+    for (size_t i = 1; i < mesh->width - 1; i++) {
 		auto mesh_cell = Mesh_get_cell(mesh, i, j);
       switch (*(lbm_cell_type_t_get_cell(mesh_type, i, j))) {
       case CELL_FUILD:
@@ -215,7 +215,7 @@ void propagation(Mesh* mesh_out, const Mesh* mesh_in) {
   for (size_t j = 0; j < mesh_out->height; j++) {
     for (size_t i = 0; i < mesh_out->width; i++) {
       // For all direction
-		auto cell_in = Mesh_get_cell(mesh_in, i, j);
+		  auto cell_in = Mesh_get_cell(mesh_in, i, j);
       for (size_t k = 0; k < DIRECTIONS; k++) {
         // Compute destination point
         ssize_t ii = (i + direction_matrix[k][0]);

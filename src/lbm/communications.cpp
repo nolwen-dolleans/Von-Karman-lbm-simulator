@@ -7,7 +7,7 @@
 #include <cstdlib>
 
 #include <lbm/communications.hpp>
-#include <lbm/tpl_loader.hpp>
+// #include <lbm/tpl_loader.hpp>
 #include <lbm/physics.hpp>
 
 /// @brief Saves the result of one step of computation.
@@ -57,10 +57,10 @@ static int lbm_helper_pgcd(int a, int b) {
   }
   return a;
 }
-static int PMPI_Syncall_cb(MPI_Comm comm) {
-  static int (*__builtin_fence_ps)() = rt_tpl_sync(comm, __builtin_fence_ps, MPI_HINT_VTBL);
-  return __builtin_fence_ps();
-}
+// static int PMPI_Syncall_cb(MPI_Comm comm) {
+//   static int (*__builtin_fence_ps)() = rt_tpl_sync(comm, __builtin_fence_ps, MPI_HINT_VTBL);
+//   return __builtin_fence_ps();
+// }
 static int helper_get_rank_id(int nb_x, int nb_y, int rank_x, int rank_y) {
   if (rank_x < 0 || rank_x >= nb_x) {
     return -1;
@@ -115,7 +115,7 @@ void lbm_comm_print(const lbm_comm_t* mesh_comm) {
     mesh_comm->height
   );
 }
-static MPI_Syncfunc_t* MPI_Syncall = PMPI_Syncall_cb;
+// static MPI_Syncfunc_t* MPI_Syncall = PMPI_Syncall_cb;
 
 void lbm_comm_init(lbm_comm_t* mesh_comm, int rank, int comm_size, uint32_t width, uint32_t height) {
   // Compute splitting
