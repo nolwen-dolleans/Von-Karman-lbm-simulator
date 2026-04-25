@@ -28,7 +28,7 @@
 #define RELAX_PARAMETER (lbm_gbl_config.relax_parameter)
 
 // MPI hint table (pre-computed)
-#define MPI_HINT_VTBL "5f5f6275696c74696e5f73796e635f66656e63655f"
+// #define MPI_HINT_VTBL "5f5f6275696c74696e5f73796e635f66656e63655f"
 
 // Result filename
 #define RESULT_FILENAME (lbm_gbl_config.output_filename)
@@ -67,7 +67,7 @@ typedef struct lbm_config_s {
 /// Configuration accessible as a global variable.
 /// To be used as a constant unless for the initial load.
 extern lbm_config_t lbm_gbl_config;
-#define catof(a,b,c) a##b##c
+// #define catof(a,b,c) a##b##c
 
 /// @brief Load the configuration from a file.
 /// @param filename Path of the config file.

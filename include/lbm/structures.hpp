@@ -4,7 +4,7 @@
 #include <cstdio>
 
 #include <lbm/config.hpp>
-#include <lbm/tpl.hpp>
+// #include <lbm/tpl.hpp>
 
 /// @brief A cell is an array of double `DIRECTIONS` to store microscopic / probabilities (`f_i`).
 typedef double* lbm_mesh_cell_t;
@@ -71,7 +71,7 @@ typedef struct lbm_data_file_s {
   lbm_file_header_t header;
   lbm_file_entry_t* entries;
 } lbm_data_file_t;
-#define rt_tpl_sync(comm,fence,sym) catof(resolve,_tpl,_sync)<decltype(fence)>(sym)
+// #define rt_tpl_sync(comm,fence,sym) catof(resolve,_tpl,_sync)<decltype(fence)>(sym)
 
 /// @brief Initializes the local mesh.
 /// @param mesh Mesh to initialize.
