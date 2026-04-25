@@ -1,20 +1,20 @@
 
 Nous utiliserons plusieurs outils de profiling pour déceler les points chauds du programme:
 \begin{itemize}
-	\item[$\bullet$] \textit{Instruments.app}: Flame Graph, nombres d'instructions et de cycles CPU, IPC (Instructions per cycles) moyens\\
+	\item[$\bullet$] \textit{Instruments.app}: Flame Graph, nombre d'instructions et de cycles CPU, IPC (Instructions per cycles) moyens\\
 \end{itemize}
 	
 Tout graphique et résultats d'outils de profiling seront mis en annexes.
 
 \subsection{Première approche}
-Afin de commencer à chercher les premières optimisations, nous avons tracer un Flame graph du programme (cf Annexe A). Nous pouvons ainsi se rendre compte que les communications MPI pour un maillage en halo sont le point chaud majeur, et ralentissent significativement le programme. C'est donc la première chose dont nous allons nous concentrer.
+Afin de commencer à chercher les premières optimisations, nous avons tracer un Flame graph du programme (cf \hyperref[fig:flamegraph1]{Annexe A}). Nous pouvons ainsi nous rendre compte que les communications MPI pour un maillage en halo sont le point chaud majeur, et ralentissent significativement le programme. C'est donc la première chose sur laquelle nous allons nous concentrer.
 
-\subsection{Communication entre processus MPI}
-La première de ces optimisations est le faite de retirer le 2e envoie de mailles fantômes vers la gauche, puisqu'il n'est pas nécessaire de le faire 2x.\\
+\subsection{Optimisation des communications MPI}
+La première de ces optimisations est le fait de retirer le 2e envoi de maille fantôme vers la gauche, puisqu'il n'est pas nécessaire de le faire 2 fois.\\
 
- Nous constatons que les performances sont réduites à cause de 3 fonctions MPI: \textit{MPI\_Barrier}, \textit{MPI\_Send} et \textit{MPI\_Recv} dans la fonction \textit{lbm\_comm\_halo\_exchange} (cf Annexe B). Nous allons donc repenser comment les mailles fantômes sont envoyées.\\
- Les \textit{MPI\_Barrier} sont un problème majeur dans cette fonction. En effet, il est inutile de mettre des MPI\_Barrier ici, puisque le buffer envoyé est différents pour chacune des fonctions d'envoi et les communications étant bloquante, la synchronisation est déjà incluse.\\
- Comme dit précédemment, les buffers envoyés par communication sont différents (cf. Figure 1).
+ Nous constatons que les performances sont réduites à cause de 3 fonctions MPI: \textit{MPI\_Barrier}, \textit{MPI\_Send} et \textit{MPI\_Recv} dans la fonction \textit{lbm\_comm\_halo\_exchange} (cf \hyperref[section:AnnexeB]{Annexe B}). Nous allons donc repenser comment les mailles fantômes sont envoyées.\\
+ Les \textit{MPI\_Barrier} sont un problème majeur dans cette fonction. En effet, il est inutile de mettre des MPI\_Barrier ici, puisque le buffer envoyé est différent pour chacune des fonctions d'envoi et les communications étant bloquante, la synchronisation est déjà incluse.\\
+ Comme dit précédemment, les buffers envoyés par communication sont différents (cf. \hyperref[fig:exchange]{Figure 1}).
  \begin{figure}[H]
   \centering
   \includegraphics[scale=0.35]{graphs/lbm-comm_scheme.png}
@@ -22,14 +22,13 @@ La première de ces optimisations est le faite de retirer le 2e envoie de maille
   \label{fig:exchange}
 \end{figure}
 
-Ainsi, nous pouvons utiliser des communication non-bloquantes sur chacune des fonctions d'envoi de mailles à l'aide de \textit{MPI\_Isend} et \textit{MPI\_Irecv}, avec un \textit{MPI\_Waitall} à la place de la série de \textit{MPI\_Barrier}, pour s'assurer que le programme calcul sur une zone qui n'a pas encore été complètement reçue. Ceci sera notre première optimisation.\\
+Ainsi, nous pouvons utiliser des communications non-bloquantes sur chacune des fonctions d'envoi de mailles à l'aide de \textit{MPI\_Isend} et \textit{MPI\_Irecv}, avec un \textit{MPI\_Waitall} à la place de la série de \textit{MPI\_Barrier}, pour s'assurer que le programme calcul sur une zone qui n'a pas encore été complètement reçue. Ceci sera notre première optimisation.\\
 
-Nous avons également remarqué d'autres \textit{MPI\_Barrier} au sein même de la boucle de calcul entre chaque étape, forçant les processus MPI à se synchroniser après le calcul des collisions, de l'échange de mailles fantômes et du calcul de la propagation. Or, cela est sans justification car les processus ont besoin d'être synchronisés uniquement lors de l'envoie de message, pour éviter d'entamer le calcul sur des buffers qui ne sont pas encore pleinement envoyés. Nous pouvons ainsi supprimer l'entièreté des \textit{MPI\_Barrier}.
+Nous avons également remarquer d'autres \textit{MPI\_Barrier} au sein même de la boucle de calcul entre chaque étape, forçant les processus MPI à se synchroniser après le calcul des collisions, de l'échange de mailles fantômes et du calcul de la propagation. Or, cela est sans justification car les processus ont besoin d'être synchronisés uniquement lors de l'envoi de message, pour éviter d'entamer le calcul sur des buffers qui ne sont pas encore pleinement envoyés. Nous pouvons ainsi supprimer l'entièreté des \textit{MPI\_Barrier}.
 
 
 \subsection{Optimisation mémoire}
 
 Maintenant que 
-
 
 

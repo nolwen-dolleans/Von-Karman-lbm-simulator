@@ -9,8 +9,8 @@ Le programme intègre déjà une mesure en MLUPS (Million Lattice Updates Per Se
 $$ Mlups = \frac{total\_cells \cdot ITERATIONS}{elapsed\_time} $$
 avec
 \begin{itemize}
-	\item[$\bullet$] $total\_cells$: le nombre totale de cellules dans le maillage
-	\item[$\bullet$] $ITERATIONS$: le nombre total de mise à jour faites par le programme
+	\item[$\bullet$] $total\_cells$: le nombre total de cellules dans le maillage
+	\item[$\bullet$] $ITERATIONS$: le nombre total de mises à jour faites par le programme
 	\item[$\bullet$] $elapsed\_time$: le runtime de la boucle de calcul
 \end{itemize}
 Nous mesurerons cette quantité 3 fois, puis nous analyserons la différence avec la précédente: 
@@ -19,8 +19,8 @@ $$ Mlups_{final} = \sum^3_{i=1}\frac{\left|Mlups^{precedent} - Mlups^{mesure}_i 
 Les incertitudes seront déterminées par la déviations standard de nos valeurs mesurées.
 \subsubsection{Vérification des résultats}
 
-Afin de s'assurer que la cohérence de notre modèle suite aux optimisations apportées, nous quantifierons ceci en analysant l'écart entre les données de référence (cf. Table 1) et celles mesurées.\\
-Pour ce faire, nous utiliserons le script \textit{Python} fourni qui consiste à sommer toutes les valeurs de densité $\rho$ et la norme du vecteur vitesse $U(\textbf{x},t)$ de toutes les cellules pour chaque frame calculée du jeu de donnée de référence ainsi que celui mesurer, avant de comparer les résultats. La solution étant déterministe, les résultats devront être identiques.\\
+Afin de d'assurer la cohérence de notre modèle suite aux optimisations apportées, nous quantifierons celles-ci en analysant l'écart entre les données de référence (cf. \hyperref[tab:reference]{Table 1}) et celles mesurées.\\
+Pour ce faire, nous utiliserons le script \textit{Python} fourni qui consiste à sommer toutes les valeurs de densité $\rho$ et la norme du vecteur vitesse $U(\textbf{x},t)$ de toutes les cellules pour chaque frame calculée du jeu de donnée de référence ainsi que pour chaque frame après optimisation, avant de comparer les résultats. La solution étant déterministe, les résultats devront être identiques.\\
 \begin{table}[H]
   \centering
   \caption{Configuration de référence}
@@ -29,7 +29,7 @@ Pour ce faire, nous utiliserons le script \textit{Python} fourni qui consiste à
     \toprule
     \textbf{Paramètres} & \textbf{Valeurs} \\
     \midrule
-    Taille de la conduite 		   & $800x160$ \\
+    Taille de la conduite 		   & $800\times160$ \\
     Position de l'obstacle         & $\{100, 80\}$ \\
     Rayon de l'obstacle  		   & $0.16$ \\
     Nombre de Reynolds de l'écoulement $Re$ & $96$ \\
@@ -45,11 +45,11 @@ uv run lbm-viz --check\
  ref_results.raw results.raw	
 \end{lstlisting}
 
-Les mesures seront fait avec les flags d'optimisations \textit{-O3} et \textit{-march=native}. Le compilateur utiliser sera indiqué pour série de mesures.
+Les mesures seront fait avec les flags d'optimisations \textit{-O3} et \textit{-march=native}. Le compilateur utilisé sera indiqué pour chaque série de mesures.
 
 \subsection{Résultats}
 
-Voici un tableau récapitulatif des optimisations et leurs impacts sur le Mlups (cf Table 2), la valeur Mlups mesurée pour la version initale est $Mlups=125\pm3$:
+Voici un tableau récapitulatif des optimisations et leurs impacts sur le Mlups (cf \hyperref[tab:results_halo]{Table 2}), la valeur Mlups mesurée pour la version initale est $Mlups=125\pm3$:
 
 \begin{table}[H]
   \centering
@@ -60,7 +60,6 @@ Voici un tableau récapitulatif des optimisations et leurs impacts sur le Mlups 
     \textbf{Optimisation} & \textbf{Mlups} & $\delta_{Mlups}$ \\
     \midrule
      Comm. non-bloquantes  & $1575$ & $\pm 20$\\
-     Sup. \textit{MPI\_Barrier} main  & $2363$ & $\pm 20$\\
      Sup. \textit{MPI\_Barrier} main  & $2363$ & $\pm 20$\\
     \bottomrule
   \end{tabular}

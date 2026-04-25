@@ -1,20 +1,22 @@
-Le code originale se structure comme suit:
+Le code original se structure comme suit:
 \begin{enumerate}
 	\item Une phase d'initialisation.
-	\item Envoie des cellules fantômes.
-	\item Calcul de la vitesse des particules fluides et de la densité de ce dernier en tous points.
+	\item Envoi des cellules fantômes.
+	\item Calcul de la vitesse des particules fluides et de la densité de ce dernier en tout points.
 	\item Actualisation de la position du fluide.
-	\item Envoie des cellules fantômes.
+	\item Envoi des cellules fantômes.
 	\item ...
 \end{enumerate}
-Par conséquent, nous pouvons extraire 2 grands axes d'optimisation: S'assurer que l'envoie de message est optimal ainsi que celui du calcul.
+Par conséquent, nous pouvons extraire 3 grands axes d'optimisation :
 
 \subsection{Communication entre processus MPI}
-Dans cette section, nous allons travailler sur plusieurs axes. Le premier sera sur la communication en elle même. En effet, nous allons chercher à privilégier les communications non bloquantes quand c'est possible, s'assurer que le maillage et la répartition des tâches sont optimales en les comparant avec l'état de l'art pour ce genre de problème, comparer s'il est plus judicieux de faire des communications collectives ou de processus à processus, limiter les synchronisations entre processus pour des calculs plus fluides.
+Dans cette section, nous allons travailler sur plusieurs axes. Le premier sera sur la communication en elle même. En effet, nous allons chercher à privilégier les communications non bloquantes quand c'est possible, s'assurer que le maillage et la répartition des tâches sont optimales en les comparant avec l'état de l'art pour ce genre de problème, comparer s'il est plus judicieux de faire des communications collectives ou de point à point, limiter les synchronisations entre processus pour des calculs plus fluides.
 
-\subsection{Accès mémoires et optimisations de caches}
-Les calculs étant juste pour cette première version du simulateur, notre objectif dans cette section va être de se concentrer sur la manière dont les calculs sont fait. Ainsi, nous chercherons à optimiser la localité mémoire (spatiale et temporelle), à s'assurer que l'allocation mémoire et la déclaration de variables soient pertinentes et à vérifier d'éventuels effets NUMA.
+\subsection{Accès mémoire et optimisations de caches}
+Les calculs étant juste pour cette première version du simulateur, notre objectif dans cette section va être de se concentrer sur la manière dont les calculs sont réalisés. Ainsi, nous chercherons à optimiser la localité mémoire (spatiale et temporelle); à s'assurer que l'allocation mémoire et la déclaration de variables soient pertinentes et à vérifier d'éventuels effets NUMA.
 
+\subsection{Micro-optimisations de calculs inutiles ou bugs éventuels}
+En fonction de notre analyse de la structure de certains calculs, il est possible de rencontrer certaines parties qui sont inutiles pour l'obtention du résultat final, tels que des valeurs étant réécrites sans utilisation particulière, des fonctions non-utilisées ou encore une structure de code n'assurant pas l'obtention de bugs dans tout les cas possibles. Ainsi, lorsque nous rencontrons une micro-optimisation réalisable, nous la mettons en place sans toujours l'avoir repérée depuis un profiler.
 
 
  
