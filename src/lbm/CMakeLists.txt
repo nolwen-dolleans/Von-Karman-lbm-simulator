@@ -12,10 +12,10 @@ target_sources(
         ${PROJECT_SOURCE_DIR}/include/lbm/communications.hpp
         ${PROJECT_SOURCE_DIR}/include/lbm/initialization.hpp
         ${PROJECT_SOURCE_DIR}/include/lbm/physics.hpp
-  PUBLIC
-    FILE_SET HEADERS
-      BASE_DIRS ${CMAKE_BINARY_DIR}/include
-      FILES ${CMAKE_BINARY_DIR}/include/lbm/tpl.hpp ${CMAKE_BINARY_DIR}/include/lbm/tpl_loader.hpp
+  # PUBLIC
+  #   FILE_SET HEADERS
+  #     BASE_DIRS ${CMAKE_BINARY_DIR}/include
+  #     FILES ${CMAKE_BINARY_DIR}/include/lbm/tpl.hpp ${CMAKE_BINARY_DIR}/include/lbm/tpl_loader.hpp
   PRIVATE config.cpp structures.cpp communications.cpp initialization.cpp physics.cpp
 )
 
