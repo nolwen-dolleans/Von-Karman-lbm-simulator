@@ -1,57 +1,83 @@
 \subsection{Protocole expérimental}
 
-\lipsum[9]
+Notre approche pour vérifier les optimisations que nous ferons est la suivante: pour chaque optimisation, nous mesurerons la variation de fréquence de mise à jour des cellules (en MLUPS) et vérifierons que les résultats restent vrais en les comparant avec une référence.\\
 
-\subsubsection{Jeux de données}
 
-\lipsum[10]
+\subsubsection{Mesure du nombre d'opérations par secondes}
 
-\subsubsection{Hyperparamètres}
+Le programme intègre déjà une mesure en MLUPS (Million Lattice Updates Per Second), déterminée comme suit:
+$$ Mlups = \frac{total\_cells \cdot ITERATIONS}{elapsed\_time} $$
+avec
+\begin{itemize}
+	\item[$\bullet$] $total\_cells$: le nombre totale de cellules dans le maillage
+	\item[$\bullet$] $ITERATIONS$: le nombre total de mise à jour faites par le programme
+	\item[$\bullet$] $elapsed\_time$: le runtime de la boucle de calcul
+\end{itemize}
+Nous mesurerons cette quantité 3 fois, puis nous analyserons la différence avec la précédente: 
+$$ Mlups_{final} = \sum^3_{i=1}\frac{\left|Mlups^{precedent} - Mlups^{mesure}_i \right|}{3} $$
 
-Les hyperparamètres utilisés sont récapitulés dans la Table~\ref{tab:hyperparams}.
+Les incertitudes seront déterminées par la déviations standard de nos valeurs mesurées.
+\subsubsection{Vérification des résultats}
 
+Afin de s'assurer que la cohérence de notre modèle suite aux optimisations apportées, nous quantifierons ceci en analysant l'écart entre les données de référence (cf. Table 1) et celles mesurées.\\
+Pour ce faire, nous utiliserons le script \textit{Python} fourni qui consiste à sommer toutes les valeurs de densité $\rho$ et la norme du vecteur vitesse $U(\textbf{x},t)$ de toutes les cellules pour chaque frame calculée du jeu de donnée de référence ainsi que celui mesurer, avant de comparer les résultats. La solution étant déterministe, les résultats devront être identiques.\\
 \begin{table}[H]
   \centering
-  \caption{Hyperparamètres de la configuration expérimentale.}
-  \label{tab:hyperparams}
+  \caption{Configuration de référence}
+  \label{tab:reference}
   \begin{tabular}{lcc}
     \toprule
-    \textbf{Paramètre} & \textbf{Valeur} & \textbf{Plage testée} \\
+    \textbf{Paramètres} & \textbf{Valeurs} \\
     \midrule
-    Taux d'apprentissage & $10^{-3}$ & $[10^{-4}, 10^{-2}]$ \\
-    Taille du lot & 64         & $\{32, 64, 128\}$ \\
-    Époques          & 100        & — \\
-    Régularisation $\lambda$ & $10^{-4}$ & $[10^{-5}, 10^{-3}]$ \\
+    Taille de la conduite 		   & $800x160$ \\
+    Position de l'obstacle         & $\{100, 80\}$ \\
+    Rayon de l'obstacle  		   & $0.16$ \\
+    Nombre de Reynolds de l'écoulement $Re$ & $96$ \\
+    Vitesse maximal du fluide $U(x=0,y,t)$ & $0.16$ \\
     \bottomrule
   \end{tabular}
 \end{table}
+
+Ainsi, nous lancerons les commandes suivantes:
+\begin{lstlisting}[language = bash]
+uv venv
+uv run lbm-viz --check\
+ ref_results.raw results.raw	
+\end{lstlisting}
+
+Les mesures seront fait avec les flags d'optimisations \textit{-O3} et \textit{-march=native}. Le compilateur utiliser sera indiqué pour série de mesures.
 
 \subsection{Résultats}
 
-\lipsum[11]
+Voici un tableau récapitulatif des optimisations et leurs impacts sur le Mlups (cf Table 2), la valeur Mlups mesurée pour la version initale est $Mlups=125\pm3$:
 
-% Exemple de tableau de résultats comparatifs
 \begin{table}[H]
   \centering
-  \caption{Comparaison des performances (\%) sur le jeu de test.}
-  \label{tab:resultats}
-  \begin{tabular}{lccc}
+  \caption{Optimisation de la communication dans l'halo}
+  \label{tab:results_halo}
+  \begin{tabular}{lcc}
     \toprule
-    \textbf{Méthode} & \textbf{Précision} & \textbf{Rappel} & \textbf{F1} \\
+    \textbf{Optimisation} & \textbf{Mlups} & $\delta_{Mlups}$ \\
     \midrule
-    Méthode A \cite{exemple2024} & 82.3 & 79.1 & 80.7 \\
-    Méthode B & 85.6 & 83.2 & 84.4 \\
-    \textbf{Notre approche} & \textbf{89.1} & \textbf{87.5} & \textbf{88.3} \\
+     Comm. non-bloquantes  & $1575$ & $\pm 20$\\
+     Sup. \textit{MPI\_Barrier} main  & $2363$ & $\pm 20$\\
+     Sup. \textit{MPI\_Barrier} main  & $2363$ & $\pm 20$\\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\subsection{Analyse et discussion}
 
-\lipsum[12]
+\begin{table}[H]
+  \centering
+  \caption{Optimisation de la mémoire}
+  \label{tab:results_memory}
+  \begin{tabular}{lcc}
+    \toprule
+    \textbf{Optimisation} & \textbf{Mlups} & $\delta_{Mlups}$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
-\begin{remark}
-  Notons que les résultats présentés dans la Table~\ref{tab:resultats} ont été obtenus avec une validation croisée à 5 plis afin de garantir la robustesse statistique.
-\end{remark}
+
 
 % 

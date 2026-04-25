@@ -7,4 +7,14 @@ Le code originale se structure comme suit:
 	\item Envoie des cellules fantômes.
 	\item ...
 \end{enumerate}
-De ce fait, nous pouvons extraire 2 grands axes d'optimisation: S'assurer que l'envoie de message est optimal ainsi que celui du calcul. 
+Par conséquent, nous pouvons extraire 2 grands axes d'optimisation: S'assurer que l'envoie de message est optimal ainsi que celui du calcul.
+
+\subsection{Communication entre processus MPI}
+Dans cette section, nous allons travailler sur plusieurs axes. Le premier sera sur la communication en elle même. En effet, nous allons chercher à privilégier les communications non bloquantes quand c'est possible, s'assurer que le maillage et la répartition des tâches sont optimales en les comparant avec l'état de l'art pour ce genre de problème, comparer s'il est plus judicieux de faire des communications collectives ou de processus à processus, limiter les synchronisations entre processus pour des calculs plus fluides.
+
+\subsection{Accès mémoires et optimisations de caches}
+Les calculs étant juste pour cette première version du simulateur, notre objectif dans cette section va être de se concentrer sur la manière dont les calculs sont fait. Ainsi, nous chercherons à optimiser la localité mémoire (spatiale et temporelle), à s'assurer que l'allocation mémoire et la déclaration de variables soient pertinentes et à vérifier d'éventuels effets NUMA.
+
+
+
+ 

@@ -3,7 +3,7 @@
 %  Compatible avec pdfLaTeX / XeLaTeX / LuaLaTeX
 % ============================================================
 
-\documentclass[12pt, a4paper, twocolumn]{article}
+\documentclass[10pt, a4paper, twocolumn]{article}
 
 % -----------------------------------------------------------
 % PACKAGES ESSENTIELS
@@ -12,11 +12,11 @@
 \usepackage[T1]{fontenc}             % Encodage des polices
 \usepackage[french]{babel}           % Langue française
 \usepackage{lmodern}                 % Police Latin Modern
-
+ 
 % Mise en page
 \usepackage[
-  top=2.5cm, bottom=2.5cm,
-  left=2cm,  right=2cm,
+  top=2cm, bottom=2.5cm,
+  left=1.4cm,  right=1.4cm,
   columnsep=0.8cm
 ]{geometry}
 
@@ -38,6 +38,8 @@
 \usepackage{booktabs}                % Tableaux professionnels
 \usepackage{caption}                 % Légendes personnalisées
 \usepackage{subcaption}              % Sous-figures
+\usepackage{listings}				 % Intégration de ligne de code
+
 
 % Couleurs
 \usepackage[dvipsnames]{xcolor}
@@ -145,17 +147,9 @@
 
   % ------- Résumé (sur toute la largeur) ----------------------
   \begin{onecolabstract}
-    \textbf{Résumé —}
+  \bigskip
     \input{resume.tex}
     
-    \medskip
-    \textbf{Mots-clés :} mot-clé 1 ; mot-clé 2 ; mot-clé 3 ; mot-clé 4 ; mot-clé 5
-    
-    \bigskip
-    \textbf{Abstract —} \lipsum  % Traduction anglaise du résumé
-    
-    \medskip
-    \textbf{Keywords:} keyword 1; keyword 2; keyword 3; keyword 4; keyword 5
   \end{onecolabstract}
 
   \vspace{1em}
@@ -177,16 +171,18 @@
 \section{Analyse du code initial}
 
 \input{analyse.tex}
+
 % -----------------------------------------------------------
-% 3. MÉTHODOLOGIE 
-% -----------------------------------------------------------
-\section{Expériences}
-\input{experiences}
-% -----------------------------------------------------------
-% 4. Optimisations apportées
+% 3. Optimisations apportées
 % -----------------------------------------------------------
 \section{Optimisations apportées}
 \input{Optimisations.tex}
+
+% -----------------------------------------------------------
+% 4. MÉTHODOLOGIE 
+% -----------------------------------------------------------
+\section{Expériences}
+\input{experiences}
 
 % -----------------------------------------------------------
 % 5. RÉSULTATS
@@ -208,14 +204,17 @@
 % -----------------------------------------------------------
 % APPENDICES (optionnel)
 % -----------------------------------------------------------
+
+\onecolumn 
+\newpage
+
+\begin{center}
+  {\large\bfseries\color{accentcolor} Annexes}
+\end{center}
+\vspace{0.5em}
+
 \appendix
+\input{annexes.tex}
 
-\section{Preuves complémentaires}
-
-\lipsum[15]
-
-\section{Détails d'implémentation}
-
-\lipsum[16]
 
 \end{document}
