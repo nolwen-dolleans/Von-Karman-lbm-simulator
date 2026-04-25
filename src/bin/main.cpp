@@ -53,15 +53,6 @@ static inline void close_file(FILE* fp) {
 }
 
 int main(int argc, char* argv[]) {
-  // Init MPI, get current rank and communicator size.
-  MPI_Init(&argc, &argv);
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  int comm_size;
-  MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
-	if (rank == 0) {
-		std::this_thread::sleep_for(std::chrono::seconds(10));
-	}
   // Get config filename
   char* config_filename;
   if (argc == 2) {
@@ -70,6 +61,13 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "Usage: %s <CONFIG_FILE>\n", argv[0]);
     return -1;
   }
+
+  // Init MPI, get current rank and communicator size.
+  MPI_Init(&argc, &argv);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  int comm_size;
+  MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
 
   // Load config file and display it on master node
   load_config(config_filename);
@@ -121,8 +119,8 @@ int main(int argc, char* argv[]) {
   // Time steps
   const double start_time = MPI_Wtime();
 	for (ssize_t i = 1; i <= ITERATIONS; i++) {
-	  if (rank == RANK_MASTER) {
-		  fprintf(stderr, "\rStep: %6d/%6d", i, ITERATIONS);
+	  if (rank == RANK_MASTER && i%1000 == 0) {
+		  fprintf(stderr, "\rStep: %6d/%6d\n", i, ITERATIONS);
 	  }
 	  // Compute special actions (border, obstacle...)
 	  special_cells(&mesh, &mesh_type, &mesh_comm);
