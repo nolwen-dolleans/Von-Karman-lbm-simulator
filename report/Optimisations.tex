@@ -22,9 +22,11 @@ La première de ces optimisations est le fait de retirer le 2e envoi de maille f
   \label{fig:exchange}
 \end{figure}
 
-Ainsi, nous pouvons utiliser des communications non-bloquantes sur chacune des fonctions d'envoi de mailles à l'aide de \textit{MPI\_Isend} et \textit{MPI\_Irecv}, avec un \textit{MPI\_Waitall} à la place de la série de \textit{MPI\_Barrier}, pour s'assurer que le programme calcul sur une zone qui n'a pas encore été complètement reçue. Ceci sera notre première optimisation.\\
+Ainsi, nous pouvons utiliser des communications non-bloquantes sur chacune des fonctions d'envoi de mailles à l'aide de \textit{MPI\_Isend} et \textit{MPI\_Irecv}, avec un \textit{MPI\_Waitall} à la place de la série de \textit{MPI\_Barrier}, pour s'assurer que le programme calcul sur une zone qui n'a pas encore été complètement reçue puis avons ajouter un tag unique en fonction du rang et de la direction de la communication afin que les communications soient déterministes. Ceci sera notre première optimisation.
 
 Nous avons également remarquer d'autres \textit{MPI\_Barrier} au sein même de la boucle de calcul entre chaque étape, forçant les processus MPI à se synchroniser après le calcul des collisions, de l'échange de mailles fantômes et du calcul de la propagation. Or, cela est sans justification car les processus ont besoin d'être synchronisés uniquement lors de l'envoi de message, pour éviter d'entamer le calcul sur des buffers qui ne sont pas encore pleinement envoyés. Nous pouvons ainsi supprimer l'entièreté des \textit{MPI\_Barrier}.
+
+Nous avons remarquer que la communication "Right to left" était dupliquée, nous avons donc simplement supprimer la seconde communication. Notons donc que nous avons 8 échanges point à point par appel à la fonction \textit{lbm\_comm\_halo\_exchange}, soit que le \textit{MPI\_Waitall} attend 16 requests à la fin de son exécution.
 
 
 \subsection{Optimisation mémoire}
