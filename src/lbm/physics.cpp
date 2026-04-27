@@ -71,20 +71,17 @@ void get_cell_velocity(Vector v, const lbm_mesh_cell_t cell, double cell_density
   assert(cell != NULL);
 	
 	const double inv_cell_density = 1.0 / cell_density;
-	for (size_t d = 0; d < DIMENSIONS; d++) v[d] = 0.0;
+	v[0] = 0.0, v[1] = 0.0;
 
 	for (size_t k = 0; k < DIRECTIONS; k++) {
-		for (size_t d = 0; d < DIMENSIONS; d++) {
-			v[d] += cell[k] * direction_matrix[k][d];
-		}
+		v[0] += cell[k] * direction_matrix[k][0];
+		v[1] += cell[k] * direction_matrix[k][1];
 	}
-
-	for (size_t d = 0; d < DIMENSIONS; d++) {
-		v[d] *= inv_cell_density;
-	}
+	v[0] *= inv_cell_density;
+	v[1] *= inv_cell_density;
 }
 
-double compute_equilibrium_profile(Vector &velocity, double density, int direction, const double &v2) {
+double compute_equilibrium_profile(const Vector& velocity, double density, int direction, const double &v2) {
   //const double v2 = get_vect_norm_2(velocity, velocity);
 
   // Compute `e_i * v_i / c`
@@ -92,25 +89,17 @@ double compute_equilibrium_profile(Vector &velocity, double density, int directi
   const double p2 = p * p;
 
   // Terms without density and direction weight
-  double f_eq = 1.0 + (3.0 * p) + ((9.0 / 2.0) * p2) - ((3.0 / 2.0) * v2);
-
-  // Multiply everything by the density and direction weight
-  f_eq *= equil_weight[direction] * density;
+  double f_eq = (1.0 + (3.0 * p) + ((9.0 / 2.0) * p2) - ((3.0 / 2.0) * v2)) * equil_weight[direction] * density;
 
   return f_eq;
 }
 
-void compute_cell_collision(lbm_mesh_cell_t &cell_out, const lbm_mesh_cell_t &cell_in) {
-  // Compute macroscopic values
-  const double density = get_cell_density(cell_in);
-  Vector v;
-  get_cell_velocity(v, cell_in, density);
-  double v2 = get_vect_norm_2(v, v);
-
+inline void compute_cell_collision(lbm_mesh_cell_t &cell_out, const lbm_mesh_cell_t &cell_in, const Vector& v, double v2, double density) {
   // Loop on microscopic directions
+  double f_eq;
   for (size_t k = 0; k < DIRECTIONS; k++) {
     // Compute f at equilibrium
-    double f_eq = compute_equilibrium_profile(v, density, k, v2);
+    f_eq = compute_equilibrium_profile(v, density, k, v2);
     // Compute f_out
     cell_out[k] = cell_in[k] - RELAX_PARAMETER * (cell_in[k] - f_eq);
   }
@@ -178,9 +167,10 @@ void compute_outflow_zou_he_const_density(lbm_mesh_cell_t cell) {
 
 void special_cells(Mesh* mesh, lbm_mesh_type_t* mesh_type, const lbm_comm_t* mesh_comm) {
   // Loop on all inner cells
+  lbm_mesh_cell_t mesh_cell;
   for (size_t j = 1; j < mesh->height - 1; j++) {
     for (size_t i = 1; i < mesh->width - 1; i++) {
-		auto mesh_cell = Mesh_get_cell(mesh, i, j);
+		mesh_cell = Mesh_get_cell(mesh, i, j);
       switch (*(lbm_cell_type_t_get_cell(mesh_type, i, j))) {
       case CELL_FUILD:
         break;
@@ -199,31 +189,39 @@ void special_cells(Mesh* mesh, lbm_mesh_type_t* mesh_type, const lbm_comm_t* mes
 }
 
 void collision(Mesh* mesh_out, const Mesh* mesh_in) {
-	
   // Loop on all inner cells
+  lbm_mesh_cell_t mesh_cell_in, mesh_cell_out;
+  Vector v;
+  double density, v2;
   for (size_t j = 1; j < mesh_in->height - 1; j++) {
     for (size_t i = 1; i < mesh_in->width - 1; i++) {
-		auto mesh_cell_out = Mesh_get_cell(mesh_out, i, j);
-		auto mesh_cell_in = Mesh_get_cell(mesh_in, i, j);
-      compute_cell_collision(mesh_cell_out, mesh_cell_in);
+      mesh_cell_in = Mesh_get_cell(mesh_in, i, j);
+
+      density = get_cell_density(mesh_cell_in);
+      get_cell_velocity(v, mesh_cell_in, density);
+      v2 = get_vect_norm_2(v, v);
+
+      mesh_cell_out = Mesh_get_cell(mesh_out, i, j);
+      compute_cell_collision(mesh_cell_out, mesh_cell_in, v, v2, density);
     }
   }
 }
 
 void propagation(Mesh* mesh_out, const Mesh* mesh_in) {
-  // Loop on all cells
-  for (size_t j = 0; j < mesh_out->height; j++) {
-    for (size_t i = 0; i < mesh_out->width; i++) {
+  const int width = (int)mesh_out->width-1;
+  const int height = (int)mesh_out->height-1;
+  int ii, jj, i, j, k;
+  lbm_mesh_cell_t cell_out;
+  for (j = 1; j < height; ++j) {
+    for (i = 1; i < width; ++i) {
       // For all direction
-		  auto cell_in = Mesh_get_cell(mesh_in, i, j);
-      for (size_t k = 0; k < DIRECTIONS; k++) {
+      cell_out = Mesh_get_cell(mesh_out, i, j);
+      for (k = 0; k < DIRECTIONS; ++k) {
         // Compute destination point
-        ssize_t ii = (i + direction_matrix[k][0]);
-        ssize_t jj = (j + direction_matrix[k][1]);
+        ii = i - (int)direction_matrix[k][0];
+        jj = j - (int)direction_matrix[k][1];
         // Propagate to neighboor nodes
-	    if (((size_t)ii < mesh_out->width) && ((size_t)jj < mesh_out->height)) {
-		  Mesh_get_cell(mesh_out, ii, jj)[k] = cell_in[k];
-        }
+        cell_out[k] = Mesh_get_cell(mesh_in, ii, jj)[k];
       }
     }
   }
