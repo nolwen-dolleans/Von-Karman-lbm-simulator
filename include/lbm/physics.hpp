@@ -50,12 +50,12 @@ double helper_compute_poiseuille(const size_t i, const size_t size);
 /// @param density Fluid's macroscopic density on the mesh.
 /// @param direction Direction in which to compute the state of equilibrium.
 /// @return Microscopic density profile at equilibrium.
-double compute_equilibrium_profile(Vector &velocity, double density, int direction, const double &v2);
+double compute_equilibrium_profile(const Vector& velocity, double density, int direction, const double &v2);
 
 /// @brief Computes the collision vector between fluids in every direction.
 /// @param cell_out Cell after collision.
 /// @param cell_in Cell before collision.
-void compute_cell_collision(lbm_mesh_cell_t &cell_out, const lbm_mesh_cell_t &cell_in);
+inline void compute_cell_collision(lbm_mesh_cell_t &cell_out, const lbm_mesh_cell_t &cell_in, const Vector& v, double v2, double density);
 
 /** ------------------------------------------------------------------------ **
  * Limit conditions                                                           *
