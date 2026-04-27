@@ -24,10 +24,27 @@ La première de ces optimisations est le fait de retirer le 2e envoi de maille f
 
 Ainsi, nous pouvons utiliser des communications non-bloquantes sur chacune des fonctions d'envoi de mailles à l'aide de \textit{MPI\_Isend} et \textit{MPI\_Irecv}, avec un \textit{MPI\_Waitall} à la place de la série de \textit{MPI\_Barrier}, pour s'assurer que le programme calcul sur une zone qui n'a pas encore été complètement reçue puis avons ajouter un tag unique en fonction du rang et de la direction de la communication afin que les communications soient déterministes. Ceci sera notre première optimisation.
 
-Nous avons également remarquer d'autres \textit{MPI\_Barrier} au sein même de la boucle de calcul entre chaque étape, forçant les processus MPI à se synchroniser après le calcul des collisions, de l'échange de mailles fantômes et du calcul de la propagation. Or, cela est sans justification car les processus ont besoin d'être synchronisés uniquement lors de l'envoi de message, pour éviter d'entamer le calcul sur des buffers qui ne sont pas encore pleinement envoyés. Nous pouvons ainsi supprimer l'entièreté des \textit{MPI\_Barrier}.
+Nous avons également remarquer d'autres \textit{MPI\_Barrier} au sein même de la boucle de calcul entre chaque étape, forçant les processus MPI à se synchroniser après le calcul des collisions, de l'échange de mailles fantômes et du calcul de la propagation. Or, cela est sans justification car les processus ont besoin d'être synchronisés uniquement lors de l'envoi de message, pour éviter d'entamer le calcul sur des buffers qui ne sont pas encore pleinement envoyés. Nous pouvons ainsi supprimer l'entièreté des \textit{MPI\_Barrier}.\\
 
-Nous avons remarquer que la communication "Right to left" était dupliquée, nous avons donc simplement supprimer la seconde communication. Notons donc que nous avons 8 échanges point à point par appel à la fonction \textit{lbm\_comm\_halo\_exchange}, soit que le \textit{MPI\_Waitall} attend 16 requests à la fin de son exécution.
+A l'heure actuelle, la division des processus MPI se fait de la manière suivante:
+\begin{enumerate}
+	\item nombre de processus en x: par le PGCD de la longueur par le nombre de processus MPI
+	\item nombre de processus en y: $\tfrac{Nombre\ de\ processus}{nombre\ de\ processus\ en\ x}$
+\end{enumerate}
 
+ \vspace{0.1cm}
+ Cette répartition naïve fonctionne, mais réparti les processus en chaîne et non en halo. En effet, PGCD de comm\_size et width vaut comm\_size dès que comm\_size divise width, on se retrouve donc avec une répartition de (comm\_size x 1). De plus, cette méthode ne prend pas en compte la taille de la conduite: le PGCD sera toujours égal au nombre de processus en x, même si la largeur est plus grande que la longueur.\\
+ Une modification que l'on peut apporter est de trouver un $nb_{x}$ et un $nb_{y}$ tels que:
+
+ $$\left\{{\frac{width}{nb_x}=\tfrac{height}{nb_y}\atop nb_x*nb_y=comm\_size}\right.$$
+ $$\implies\left\{{nb_x=\sqrt{comm\_size\tfrac{width}{height}}\atop nb_y=comm\_size / nb_x}\right.$$
+\\
+
+Cependant, comme $nb_x$ et $nb_y$ sont des entiers, afin de limiter des erreurs suite à des conversions de flottants, nous avons choisi de faire cette algorithme:
+on détermine la paire $\left(i\leq comm\_size, j= comm\_size/i\right)$ minimisant la fonction suivante $\left|j - \sqrt{comm\_size \times width / height}\right|$.\\
+Ceci permettra de trouver le meilleur couple qui suit la longueur et la largeur: plus la largeur est grande, plus il y aura de nombre de processus en y, et inversement. Cela nous permettra d'avoir une topologie en halo et non en chaîne dans la majorité des cas.\\
+
+Nous en profiterons également pour revisiter la manière dont les cellules fantômes sont envoyés horizontalement. En effet, pour ces communications, les processus envoient une colonne de cellules qui ne peuvent se faire un 1 seul message, contrairement aux envois verticaux, les colonnes n'étant pas contiguës en mémoire en C++. Heureusement, il est possible de le faire en 1 message par le biais de vecteur MPI\footnote{Source: https://www.to.infn.it/~mignone/MPI/lecture4.pdf}. Cela nous permet de faire un Datatype MPI permettant de faire un vecteur composé de \textit{mesh->height - 2} quantité de \textit{DIRECTIONS} doubles, avec un stride de \textit{mesh->width * DIRECTIONS}. Ainsi, il suffit d'envoyer 1 vecteur de ce type par message pour envoyer une colonne en entier.
 
 \subsection{Optimisation mémoire}
 
