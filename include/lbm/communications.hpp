@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include <mpi.h>
+#include "mpi.h"
 
 #include <lbm/structures.hpp>
 
@@ -25,6 +25,8 @@ typedef enum lbm_comm_type_e {
 
 /// @brief Structure used to store information about the communications.
 typedef struct lbm_comm_t_s {
+	MPI_Comm cart_comm;
+	MPI_Datatype col_type;
   /// X position of the local mesh in the global one (origin).
   uint32_t x;
   /// Y position of the local mesh in the global one (origin).
@@ -77,9 +79,9 @@ void lbm_comm_release(lbm_comm_t* mesh);
 void lbm_comm_print(const lbm_comm_t* mesh_comm);
 
 /// @brief Performance halo exchange of ghost cells.
-void lbm_comm_halo_exchange(lbm_comm_t* mesh, Mesh* mesh_to_process);
+void lbm_comm_halo_exchange(lbm_comm_t* mesh, Mesh* mesh_to_process, MPI_Request* reqs_v);
 
 /// @brief Mesh rendering by doing reduction on rank 0 (master).
 /// @param mesh_comm Communication mesh to use.
 /// @param temp Temporary mesh to store the segments.
-void save_frame_all_domain(FILE* fp, Mesh* source_mesh, Mesh* temp);
+void save_frame_all_domain(lbm_comm_t* mesh, FILE* fp, Mesh* source_mesh, Mesh* temp);
