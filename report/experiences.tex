@@ -46,37 +46,3 @@ uv run lbm-viz --check\
 \end{lstlisting}
 
 Les mesures seront fait avec les flags d'optimisations \textit{-O3} et \textit{-march=native}. Le compilateur utilisé sera indiqué pour chaque série de mesures.
-
-\subsection{Résultats}
-
-Voici un tableau récapitulatif des optimisations et leurs impacts sur le Mlups (cf \hyperref[tab:results_halo]{Table 2}), la valeur Mlups mesurée pour la version initale est $Mlups=125\pm3$:
-
-\begin{table}[H]
-  \centering
-  \caption{Optimisation de la communication dans l'halo}
-  \label{tab:results_halo}
-  \begin{tabular}{lcc}
-    \toprule
-    \textbf{Optimisation} & \textbf{Mlups} & $\delta_{Mlups}$ \\
-    \midrule
-     Comm. non-bloquantes  & $1575$ & $\pm 20$\\
-     Sup. \textit{MPI\_Barrier} main  & $2363$ & $\pm 20$\\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-
-\begin{table}[H]
-  \centering
-  \caption{Optimisation de la mémoire}
-  \label{tab:results_memory}
-  \begin{tabular}{lcc}
-    \toprule
-    \textbf{Optimisation} & \textbf{Mlups} & $\delta_{Mlups}$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-
-
-% 

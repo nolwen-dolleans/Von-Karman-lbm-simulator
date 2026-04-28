@@ -41,6 +41,13 @@
 \usepackage{listings}				 % Intégration de ligne de code
 
 
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    breakatwhitespace=true,
+    columns=flexible
+}
+
 % Couleurs
 \usepackage[dvipsnames]{xcolor}
 \definecolor{accentcolor}{RGB}{0, 75, 135}  % Bleu académique
@@ -98,8 +105,8 @@
 % -----------------------------------------------------------
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small\textit{Nom de la revue / Conférence}}
-\fancyhead[R]{\small\textit{Auteur(s) — \the\year}}
+\fancyhead[L]{\small\textit{TOP}}
+\fancyhead[R]{\small\textit{Bauer Théo - Nolwen Dolléans}}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 
@@ -115,22 +122,19 @@
 % -----------------------------------------------------------
 \title{%
   \vspace{-1.5cm}
-  {\large \textbf{Nom de la revue / Conférence}} \\[0.3em]
   \rule{\linewidth}{0.5pt} \\[0.5em]
-  {\LARGE \textbf{Titre principal de l'article}} \\[0.2em]
-  {\large Sous-titre ou précision si nécessaire}
+  {\LARGE \textbf{Optimization of an hybrid parallel D2Q9 lattice Boltzmann solver for Kármán vortex street}} \\[0.2em]
+  {\large Technique d'Optimisation de la Parallélisation}
 }
 
 \author{%
-  \textbf{Prénom Nom\textsuperscript{1}} \quad
-  \textbf{Prénom Nom\textsuperscript{2}} \\[0.4em]
-  \small \textsuperscript{1}Laboratoire / Institution, Ville, Pays \\
-  \small \textsuperscript{2}Laboratoire / Institution, Ville, Pays \\[0.3em]
-  \small \href{mailto:auteur@institution.fr}{auteur@institution.fr}
+  \textbf{Bauer Théo} \quad
+  \textbf{Nolwen Dolléans} \\[0.4em]
+  \small M1 - CHPS \\
 }
 
 \date{%
-  \small Soumis le : \today \quad | \quad Accepté le : JJ/MM/AAAA
+  \small Soumis le : \today
 }
 
 % ============================================================
@@ -141,18 +145,18 @@
 % ------- Page de titre ----------------------------------------
 \twocolumn[
   \maketitle
-  \vspace{-0.5em}
-  \rule{\linewidth}{1.5pt}
-  \vspace{0.5em}
+  % \vspace{-0.5em}
+  % \rule{\linewidth}{1.5pt}
+  % \vspace{0.5em}
 
   % ------- Résumé (sur toute la largeur) ----------------------
-  \begin{onecolabstract}
-  \bigskip
-    \input{resume.tex}
+  % \begin{onecolabstract}
+  % \bigskip
+  %   % \input{resume.tex}
     
-  \end{onecolabstract}
+  % \end{onecolabstract}
 
-  \vspace{1em}
+  % \vspace{1em}
   \rule{\linewidth}{1.5pt}
   \vspace{1em}
 ]

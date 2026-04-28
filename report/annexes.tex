@@ -70,30 +70,28 @@ void lbm_comm_halo_exchange(lbm_comm_t* mesh, Mesh* mesh_to_process) {
 \end{figure}
 
 
-\section{Configurations utilisées}
-\subsection{Macos}
-Model Name: MacBook Air\\
-
-Chip: Apple M4
-Total Number of Cores: 10 (4 Performance and 6 Efficiency)
-Memory: 16 GB
-Page Size: 16 KB\\
-
-Cores Performance:
-Frequency: 4,4 GHz 
-L1i: 192 KB
-L1d: 128 KB
-L2: 16 MB\\
-
-Cores Efficiency:
-Frequency: 2,9 GHz
-L1i: 128 KB
-L1d: 64 KB
-L2: 4 MB\\
-
-Compiler:
-g++: 15.0.2\\
-
-
-
-
+\section{Comparaison version naïve et optimisée de cache-miss ratio}
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}{1.0\textwidth}
+    \centering
+    \includegraphics[scale=0.6]{graphs/miss-naive.png}
+    \caption{Cache-misses version naïve}    
+  \end{subfigure}
+    \begin{subfigure}{1.0\textwidth}
+    \centering
+    \includegraphics[scale=0.6]{graphs/ref-naive.png}
+    \caption{Cache-references version naïve}
+    \label{fig:perf-naive}
+  \end{subfigure}
+    \begin{subfigure}{1.0\textwidth}
+    \centering
+    \includegraphics[scale=0.6]{graphs/miss-opti.png}
+    \caption{cache-misses version optimisée}    
+  \end{subfigure}
+    \begin{subfigure}{1.0\textwidth}
+    \centering
+    \includegraphics[scale=0.6]{graphs/ref-opti.png}
+    \caption{cache-references version optimisée}
+  \end{subfigure}
+\end{figure}

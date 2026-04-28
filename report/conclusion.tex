@@ -1,2 +1,7 @@
+Au long de l'analyse de ce programme, nous avons été capables de repérer divers types de problèmes optimisables. Que ce soit en lien avec le modèle de parallélisation, avec des phénomènes informatiques ou encore des observations directes de mesures de performances. Ces problèmes nous ont mener par la suite à une inspection fine du code et de compréhension du phénomène étudié.
 
-\lipsum[1]
+Le résultat obtenu à ce jour est satisfaisant, la différence lors des comparaisons suite à chaque optimisations est notable et nous avons étudier une partie importante de l'ensemble du code.
+
+Parmis les optimisations supplémentaires qui seraient réalisables nous comptons principalement la vectorisation. Les fonctions \textit{collision} et \textit{propagation} sont complètement vectorisables (après optimisation) mais nécessiteraient une approche différente de l'ordonnancement de la mémoire des tableaux des cellules, en particulier d'avoir la width contigüe en mémoire.
+
+Finalement ce projet à été enrichissant et nous a obligé à appliquer concrètement diverses connaissances apprises au cours de cette année d'étude.

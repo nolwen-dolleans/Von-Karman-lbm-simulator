@@ -1,2 +1,19 @@
 
-\lipsum[2]
+Voici un tableau récapitulatif des optimisations et leurs impacts sur le Mlups (cf \hyperref[tab:results_halo]{Table 2}), la valeur Mlups mesurée pour la version initale est $Mlups=125\pm3$:
+
+\begin{table}[H]
+  \centering
+  \caption{Optimisation de la communication dans l'halo}
+  \label{tab:results_halo}
+  \begin{tabular}{lcc}
+    \toprule
+    \textbf{Optimisation} & \textbf{Mlups} & $\delta_{Mlups}$ \\
+    \midrule
+     Comm. non-bloquantes  & $1575$ & $\pm 20$\\
+     Sup. \textit{MPI\_Barrier} main  & $2363$ & $\pm 20$\\
+     Halo + 1 message / colonne  & $2503$ & $\pm 30$\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% 
