@@ -6,8 +6,8 @@
 #include <omp.h>
 
 // #include <lbm/communications.hpp>
-#include <lbm/config.hpp>
-#include <lbm/structures.hpp>
+// #include <lbm/config.hpp>
+// #include <lbm/structures.hpp>
 
 #if DIRECTIONS == 9 && DIMENSIONS == 2
 /// Definition of the 9 base vectors used to discretize the directions on each mesh.
@@ -172,9 +172,9 @@ void compute_outflow_zou_he_const_density(lbm_mesh_cell_t cell) {
 void special_cells(Mesh* mesh, lbm_mesh_type_t* mesh_type, const lbm_comm_t* mesh_comm) {
   // Loop on all inner cells
   lbm_mesh_cell_t mesh_cell;
-  for (int j = 0; j < mesh->height; j++) {
+  for (int j = 1; j < mesh->height-1; j++) {
   #pragma omp for schedule(dynamic)
-    for (int i = 0; i < mesh->width; i++) {
+    for (int i = 1; i < mesh->width-1; i++) {
 		mesh_cell = Mesh_get_cell(mesh, i, j);
       switch (*(lbm_cell_type_t_get_cell(mesh_type, i, j))) {
       case CELL_FUILD:

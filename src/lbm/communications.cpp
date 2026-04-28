@@ -26,8 +26,8 @@ void save_frame(FILE* fp, const Mesh* mesh) {
   lbm_file_entry_t buffer[WRITE_BUFFER_ENTRIES];
   // Loop on all values
   size_t cnt = 0;
-  for (size_t i = 1; i < mesh->width - 1; i++) {
-		for (size_t j = 1; j < mesh->height - 1; j++) {
+	for (size_t j = 1; j < mesh->height - 1; j++) {
+	  for (size_t i = 1; i < mesh->width - 1; i++) {
 	  	// Compute macroscopic values
 	  	const double density = get_cell_density(Mesh_get_cell(mesh, i, j));
 	  	Vector v;
@@ -42,8 +42,8 @@ void save_frame(FILE* fp, const Mesh* mesh) {
 	  	if (cnt == WRITE_BUFFER_ENTRIES) {
 			fwrite(buffer, sizeof(lbm_file_entry_t), cnt, fp);
 			cnt = 0;
-	  }
-	}
+	  	}
+		}
   }
   // Final flush
   if (cnt != 0) {
