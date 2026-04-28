@@ -23,7 +23,7 @@ static void write_file_header(FILE* fp, lbm_comm_t* mesh_comm) {
     .magick      = RESULT_MAGICK,
     .mesh_width  = MESH_WIDTH,
     .mesh_height = MESH_HEIGHT,
-    .lines       = static_cast<uint32_t>(mesh_comm->nb_y),
+	.lines       = static_cast<uint32_t>(mesh_comm->nb_y),
   };
 
   // Write file
@@ -35,14 +35,14 @@ static void write_file_header(FILE* fp, lbm_comm_t* mesh_comm) {
 static FILE* open_output_file() {
   // No output if empty filename
   if (RESULT_FILENAME == NULL) {
-    return NULL;
+	return NULL;
   }
 
   // Open result file
   FILE* fp = fopen(RESULT_FILENAME, "wb");
   if (fp == NULL) {
-    perror(RESULT_FILENAME);
-    abort();
+	perror(RESULT_FILENAME);
+	abort();
   }
 
   return fp;
@@ -53,13 +53,13 @@ static inline void close_file(FILE* fp) {
 }
 
 int main(int argc, char* argv[]) {
-  // Get config filename
+  	// Get config filename
 	char* config_filename;
 	if (argc == 2) {
-	  config_filename = strdup(argv[1]);
+	  	config_filename = strdup(argv[1]);
 	} else {
-	  fprintf(stderr, "Usage: %s <CONFIG_FILE>\n", argv[0]);
-	  return -1;
+		fprintf(stderr, "Usage: %s <CONFIG_FILE>\n", argv[0]);
+		return -1;
 	}
 
 	// Init MPI, get current rank and communicator size.
@@ -72,14 +72,14 @@ int main(int argc, char* argv[]) {
 	// Load config file and display it on master node
 	load_config(config_filename);
 	if (rank == RANK_MASTER) {
-	  print_config();
+		print_config();
 	}
 
 	// Init structures, allocate memory...
 	lbm_comm_t mesh_comm;
 	lbm_comm_init(&mesh_comm, rank, comm_size, MESH_WIDTH, MESH_HEIGHT);
 	  
-	  MPI_Comm_rank(mesh_comm.cart_comm, &rank);
+	MPI_Comm_rank(mesh_comm.cart_comm, &rank);
 
 	Mesh mesh;
 	Mesh_init(&mesh, lbm_comm_width(&mesh_comm), lbm_comm_height(&mesh_comm));
@@ -96,9 +96,9 @@ int main(int argc, char* argv[]) {
 	// Master open the output file
 	FILE* fp = NULL;
 	if (rank == RANK_MASTER) {
-	  fp = open_output_file();
-	  // Write header
-	  write_file_header(fp, &mesh_comm);
+		fp = open_output_file();
+	  	// Write header
+	  	write_file_header(fp, &mesh_comm);
 	}
 
 	// Setup initial conditions on mesh
@@ -107,54 +107,70 @@ int main(int argc, char* argv[]) {
 
 	// Write initial condition in output file
 	if (lbm_gbl_config.output_filename != NULL) {
-	  save_frame_all_domain(&mesh_comm, fp, &mesh, &temp_render);
+		save_frame_all_domain(&mesh_comm, fp, &mesh, &temp_render);
 	}
 
 	// Barrier to wait for all processes before starting
 	MPI_Barrier(MPI_COMM_WORLD);
 	if (rank == RANK_MASTER) {
-	  putc('\n', stdout);
+		putc('\n', stdout);
 	}
 
 	assert(temp.width == mesh.width);
 	assert(temp.height == mesh.height);
-  // Time steps
+  	// Time steps
 	double compute_start, compute_end, compute_elapse = 0;
   const double start_time = MPI_Wtime();
 	MPI_Request reqs_v[16];
-	for (ssize_t i = 1; i <= ITERATIONS; i++) {
-	  if (rank == RANK_MASTER) {
-		  fprintf(stderr, "\rStep: %6d/%6d", i, ITERATIONS);
-	  }
-		
-		//compute_start = MPI_Wtime();
-	  // Compute special actions (border, obstacle...)
-	  special_cells(&mesh, &mesh_type, &mesh_comm);
-	  // Need to wait all before doing next step
-	  //MPI_Barrier(MPI_COMM_WORLD);
-	  // Compute collision term
-	  collision(&temp, &mesh);
-	  // Need to wait all before doing next step
-	  //MPI_Barrier(MPI_COMM_WORLD);
-		//compute_end = MPI_Wtime();
-		//compute_elapse  += compute_end - compute_start;
-		
-	  // Propagate values from node to neighboors
-	  lbm_comm_halo_exchange(&mesh_comm, &temp, reqs_v);
-		MPI_Waitall(16, reqs_v, MPI_STATUS_IGNORE);
-		//compute_start = MPI_Wtime();
-	  propagation(&mesh, &temp);
-	  //propagation_left(&mesh, &temp);
-		//compute_end = MPI_Wtime();
-		//compute_elapse  += compute_end - compute_start;
-	  // Need to wait all before doing next step
-	  //MPI_Barrier(MPI_COMM_WORLD);
-	  
-	  // Save step
-	  if (i % WRITE_STEP_INTERVAL == 0/* && lbm_gbl_config.output_filename != NULL*/) {
-	  save_frame_all_domain(&mesh_comm, fp, &mesh, &temp_render);
-	}
-  }
+	#pragma omp parallel
+{
+		for (ssize_t i = 1; i <= ITERATIONS; i++) {
+			#pragma omp single
+			{
+				if (rank == RANK_MASTER && i%1000 == 0) {
+					fprintf(stderr, "\rStep: %6d/%6d\n", i, ITERATIONS);
+				}
+			}
+			special_cells(&mesh, &mesh_type, &mesh_comm);
+
+			//compute_start = MPI_Wtime();
+			// Compute special actions (border, obstacle...)
+			// Need to wait all before doing next step
+			//MPI_Barrier(MPI_COMM_WORLD);
+			// Compute collision term
+
+			collision(&temp, &mesh);
+
+			// Need to wait all before doing next step
+			//MPI_Barrier(MPI_COMM_WORLD);
+			//compute_end = MPI_Wtime();
+			//compute_elapse  += compute_end - compute_start;
+			
+			// Propagate values from node to neighboors
+			#pragma omp single
+			{
+				lbm_comm_halo_exchange(&mesh_comm, &temp, reqs_v);
+				MPI_Waitall(16, reqs_v, MPI_STATUS_IGNORE);
+			}
+			//compute_start = MPI_Wtime();
+
+			propagation(&mesh, &temp);
+
+			//propagation_left(&mesh, &temp);
+			//compute_end = MPI_Wtime();
+			//compute_elapse  += compute_end - compute_start;
+			// Need to wait all before doing next step
+			//MPI_Barrier(MPI_COMM_WORLD);
+			
+			// Save step
+			#pragma omp master
+			{
+				if (i % WRITE_STEP_INTERVAL == 0/* && lbm_gbl_config.output_filename != NULL*/) {
+					save_frame_all_domain(&mesh_comm, fp, &mesh, &temp_render);
+				}
+			}
+		}
+}
 
 	const double end_time      = MPI_Wtime();
 	const double elapsed_time  = end_time - start_time;
@@ -162,29 +178,29 @@ int main(int argc, char* argv[]) {
 	const double mlups         = (static_cast<double>(total_cells) * ITERATIONS) / (elapsed_time * 1e6);
 
 	MPI_Barrier(MPI_COMM_WORLD);
-	  //if (rank == RANK_MASTER) fprintf(stderr, "\n");
-	  //fprintf(stderr, "compute time of %d:  %.2f s\n", rank, (compute_elapse));
+	//if (rank == RANK_MASTER) fprintf(stderr, "\n");
+	//fprintf(stderr, "compute time of %d:  %.2f s\n", rank, (compute_elapse));
 	if (rank == RANK_MASTER) {
-	  if (fp != NULL) {
-		close_file(fp);
-	  }
-	  fprintf(stderr, "\rSIMULATION COMPLETED.\n\n");
-	  fprintf(stderr, "FOM:  %.2f MLUPS\n", mlups);
-	  fprintf(stderr, "runtime:  %.2f s\n", (elapsed_time));
+		if (fp != NULL) {
+			close_file(fp);
+	  	}
+		fprintf(stderr, "\rSIMULATION COMPLETED.\n\n");
+		fprintf(stderr, "FOM:  %.2f MLUPS\n", mlups);
+		fprintf(stderr, "runtime:  %.2f s\n", (elapsed_time));
 		FILE* file = fopen("runtime.csv", "a+");
 		fprintf(file, "FOM:  %.2f MLUPS\n", mlups);
 		fclose(file);
 	}
 
-  // Free memory
-  lbm_comm_release(&mesh_comm);
-  Mesh_release(&mesh);
-  Mesh_release(&temp);
-  Mesh_release(&temp_render);
-  lbm_mesh_type_t_release(&mesh_type);
+  	// Free memory
+  	lbm_comm_release(&mesh_comm);
+  	Mesh_release(&mesh);
+  	Mesh_release(&temp);
+  	Mesh_release(&temp_render);
+  	lbm_mesh_type_t_release(&mesh_type);
 
-  // Close MPI
-  MPI_Finalize();
+  	// Close MPI
+	MPI_Finalize();
 
-  return EXIT_SUCCESS;
+  	return EXIT_SUCCESS;
 }
