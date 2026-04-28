@@ -85,7 +85,7 @@ double compute_equilibrium_profile(const Vector& velocity, double density, int d
   //const double v2 = get_vect_norm_2(velocity, velocity);
 
   // Compute `e_i * v_i / c`
-  const double p  = get_vect_norm_2(direction_matrix[direction], velocity);
+  const double p  = direction_matrix[direction][0]*velocity[0] + direction_matrix[direction][1]*velocity[1];
   const double p2 = p * p;
 
   // Terms without density and direction weight
@@ -97,9 +97,13 @@ double compute_equilibrium_profile(const Vector& velocity, double density, int d
 inline void compute_cell_collision(lbm_mesh_cell_t &cell_out, const lbm_mesh_cell_t &cell_in, const Vector& v, double v2, double density) {
   // Loop on microscopic directions
   double f_eq;
-  for (size_t k = 0; k < DIRECTIONS; k++) {
+  for (size_t k = 0; k < DIRECTIONS; ++k) {
     // Compute f at equilibrium
-    f_eq = compute_equilibrium_profile(v, density, k, v2);
+    const double p  = direction_matrix[k][0]*v[0] + direction_matrix[k][1]*v[1];
+    const double p2 = p * p;
+
+    // Terms without density and direction weight
+    f_eq = (1.0 + 3.0*p + (9.0*p2 - 3.0*v2)/2.0) * equil_weight[k] * density;
     // Compute f_out
     cell_out[k] = cell_in[k] - RELAX_PARAMETER * (cell_in[k] - f_eq);
   }
@@ -168,8 +172,9 @@ void compute_outflow_zou_he_const_density(lbm_mesh_cell_t cell) {
 void special_cells(Mesh* mesh, lbm_mesh_type_t* mesh_type, const lbm_comm_t* mesh_comm) {
   // Loop on all inner cells
   lbm_mesh_cell_t mesh_cell;
-  for (size_t j = 1; j < mesh->height - 1; j++) {
-    for (size_t i = 1; i < mesh->width - 1; i++) {
+  for (int j = 0; j < mesh->height; j++) {
+  #pragma omp for schedule(dynamic)
+    for (int i = 0; i < mesh->width; i++) {
 		mesh_cell = Mesh_get_cell(mesh, i, j);
       switch (*(lbm_cell_type_t_get_cell(mesh_type, i, j))) {
       case CELL_FUILD:
@@ -193,8 +198,9 @@ void collision(Mesh* mesh_out, const Mesh* mesh_in) {
   lbm_mesh_cell_t mesh_cell_in, mesh_cell_out;
   Vector v;
   double density, v2;
-  for (size_t j = 1; j < mesh_in->height - 1; j++) {
-    for (size_t i = 1; i < mesh_in->width - 1; i++) {
+  for (int j = 1; j < mesh_in->height - 1; j++) {
+  #pragma omp for schedule(dynamic)
+    for (int i = 1; i < mesh_in->width - 1; i++) {
       mesh_cell_in = Mesh_get_cell(mesh_in, i, j);
 
       density = get_cell_density(mesh_cell_in);
@@ -213,6 +219,7 @@ void propagation(Mesh* mesh_out, const Mesh* mesh_in) {
   int ii, jj, i, j, k;
   lbm_mesh_cell_t cell_out;
   for (j = 1; j < height; ++j) {
+  #pragma omp for schedule(dynamic)
     for (i = 1; i < width; ++i) {
       // For all direction
       cell_out = Mesh_get_cell(mesh_out, i, j);

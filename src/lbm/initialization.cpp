@@ -70,21 +70,21 @@ void setup_init_state_border(Mesh* mesh, lbm_mesh_type_t* mesh_type, const lbm_c
   const double rho = 1.0;
 
   // Setup left border type
-  if (mesh_comm->left_id == -1) {
+  if (mesh_comm->left_id == MPI_PROC_NULL) {
     for (size_t j = 1; j < mesh->height - 1; j++) {
       *(lbm_cell_type_t_get_cell(mesh_type, 0, j)) = CELL_LEFT_IN;
     }
   }
 
   // Setup right border type
-  if (mesh_comm->right_id == -1) {
+  if (mesh_comm->right_id == MPI_PROC_NULL) {
     for (size_t j = 1; j < mesh->height - 1; j++) {
       *(lbm_cell_type_t_get_cell(mesh_type, mesh->width - 1, j)) = CELL_RIGHT_OUT;
     }
   }
 
   // Setup top border type
-  if (mesh_comm->top_id == -1) {
+  if (mesh_comm->top_id == MPI_PROC_NULL) {
     for (size_t i = 0; i < mesh->width; i++) {
       for (size_t k = 0; k < DIRECTIONS; k++) {
         // Compute equilibrium.
@@ -97,7 +97,7 @@ void setup_init_state_border(Mesh* mesh, lbm_mesh_type_t* mesh_type, const lbm_c
   }
 
   // Setup bottom border type
-  if (mesh_comm->bottom_id == -1) {
+  if (mesh_comm->bottom_id == MPI_PROC_NULL) {
     for (size_t i = 0; i < mesh->width; i++) {
       for (size_t k = 0; k < DIRECTIONS; k++) {
         // Compute equilibrium.
