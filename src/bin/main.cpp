@@ -193,6 +193,7 @@ int main(int argc, char* argv[]) {
 	}
 
   	// Free memory
+		MPI_Type_free(&mesh_comm.col_type);
   	lbm_comm_release(&mesh_comm);
   	Mesh_release(&mesh);
   	Mesh_release(&temp);
