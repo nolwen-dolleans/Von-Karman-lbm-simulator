@@ -163,7 +163,7 @@ int main(int argc, char* argv[]) {
 			//MPI_Barrier(MPI_COMM_WORLD);
 			
 			// Save step
-			#pragma omp master
+			#pragma omp single
 			{
 				if (i % WRITE_STEP_INTERVAL == 0/* && lbm_gbl_config.output_filename != NULL*/) {
 					save_frame_all_domain(&mesh_comm, fp, &mesh, &temp_render);
