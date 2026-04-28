@@ -24,30 +24,50 @@ La première de ces optimisations est le fait de retirer le 2e envoi de maille f
 
 Ainsi, nous pouvons utiliser des communications non-bloquantes sur chacune des fonctions d'envoi de mailles à l'aide de \textit{MPI\_Isend} et \textit{MPI\_Irecv}, avec un \textit{MPI\_Waitall} à la place de la série de \textit{MPI\_Barrier}, pour s'assurer que le programme calcul sur une zone qui n'a pas encore été complètement reçue puis avons ajouter un tag unique en fonction du rang et de la direction de la communication afin que les communications soient déterministes. Ceci sera notre première optimisation.
 
-Nous avons également remarquer d'autres \textit{MPI\_Barrier} au sein même de la boucle de calcul entre chaque étape, forçant les processus MPI à se synchroniser après le calcul des collisions, de l'échange de mailles fantômes et du calcul de la propagation. Or, cela est sans justification car les processus ont besoin d'être synchronisés uniquement lors de l'envoi de message, pour éviter d'entamer le calcul sur des buffers qui ne sont pas encore pleinement envoyés. Nous pouvons ainsi supprimer l'entièreté des \textit{MPI\_Barrier}.\\
+Nous avons également remarquer d'autres \textit{MPI\_Barrier} au sein même de la boucle de calcul entre chaque étape, forçant les processus MPI à se synchroniser après le calcul des collisions, de l'échange de mailles fantômes et du calcul de la propagation. Or, cela est sans justification car les processus ont besoin d'être synchronisés uniquement lors de l'envoi de message, pour éviter d'entamer le calcul sur des buffers qui ne sont pas encore pleinement envoyés. Nous pouvons ainsi supprimer l'entièreté des \textit{MPI\_Barrier}.
 
-A l'heure actuelle, la division des processus MPI se fait de la manière suivante:
-\begin{enumerate}
-	\item nombre de processus en x: par le PGCD de la longueur par le nombre de processus MPI
-	\item nombre de processus en y: $\tfrac{Nombre\ de\ processus}{nombre\ de\ processus\ en\ x}$
-\end{enumerate}
+Nous avons remarquer que la communication "Right to left" était dupliquée, nous avons donc simplement supprimer la seconde communication. Notons donc que nous avons 8 échanges point à point par appel à la fonction \textit{lbm\_comm\_halo\_exchange}, soit que le \textit{MPI\_Waitall} attend 16 requests à la fin de son exécution.
 
- \vspace{0.1cm}
- Cette répartition naïve fonctionne, mais réparti les processus en chaîne et non en halo. En effet, PGCD de comm\_size et width vaut comm\_size dès que comm\_size divise width, on se retrouve donc avec une répartition de (comm\_size x 1). De plus, cette méthode ne prend pas en compte la taille de la conduite: le PGCD sera toujours égal au nombre de processus en x, même si la largeur est plus grande que la longueur.\\
- Une modification que l'on peut apporter est de trouver un $nb_{x}$ et un $nb_{y}$ tels que:
-
- $$\left\{{\frac{width}{nb_x}=\tfrac{height}{nb_y}\atop nb_x*nb_y=comm\_size}\right.$$
- $$\implies\left\{{nb_x=\sqrt{comm\_size\tfrac{width}{height}}\atop nb_y=comm\_size / nb_x}\right.$$
-\\
-
-Cependant, comme $nb_x$ et $nb_y$ sont des entiers, afin de limiter des erreurs suite à des conversions de flottants, nous avons choisi de faire cette algorithme:
-on détermine la paire $\left(i\leq comm\_size, j= comm\_size/i\right)$ minimisant la fonction suivante $\left|j - \sqrt{comm\_size \times width / height}\right|$.\\
-Ceci permettra de trouver le meilleur couple qui suit la longueur et la largeur: plus la largeur est grande, plus il y aura de nombre de processus en y, et inversement. Cela nous permettra d'avoir une topologie en halo et non en chaîne dans la majorité des cas.\\
-
-Nous en profiterons également pour revisiter la manière dont les cellules fantômes sont envoyés horizontalement. En effet, pour ces communications, les processus envoient une colonne de cellules qui ne peuvent se faire un 1 seul message, contrairement aux envois verticaux, les colonnes n'étant pas contiguës en mémoire en C++. Heureusement, il est possible de le faire en 1 message par le biais de vecteur MPI\footnote{Source: https://www.to.infn.it/~mignone/MPI/lecture4.pdf}. Cela nous permet de faire un Datatype MPI permettant de faire un vecteur composé de \textit{mesh->height - 2} quantité de \textit{DIRECTIONS} doubles, avec un stride de \textit{mesh->width * DIRECTIONS}. Ainsi, il suffit d'envoyer 1 vecteur de ce type par message pour envoyer une colonne en entier.
 
 \subsection{Optimisation mémoire}
 
-Maintenant que 
+Maintenant que les communications ont été optimisées, nous allons nous pencher sur l'accès à la mémoire, pour ce faire, nous avons utiliser le profiler perf, en évaluant les
+\begin{itemize}
+	\item[$\bullet$] instructions
+	\item[$\bullet$] cycles
+	\item[$\bullet$] cache-references
+	\item[$\bullet$] cache-misses
+\end{itemize}
+Nous avons comme résultat un total de 32 Million cache-references et 17,920 Million cache-misses soit près de la moitié de la recherche de la mémoire n'est pas directement accedée, et doit être cherchée dans un espace d'adressage plus distant. En nous penchant sur les fonctions ne montrant pas une bonne gestion de la mémoire, nous trouvons :
+\begin{itemize}
+  \item[$\bullet$] \textit{global data} 934 B instructions, 16 B cache-misses
+  \item[$\bullet$] \textit{compute\_cell\_collision} comporte 51.41\% des instructions et 37.71\% des cache-misses;
+  \item[$\bullet$] \textit{propagation} comporte 21.64\% des instructions et 58.33\% des cache-misses.
+\end{itemize}
+Ces observations sont dûes aux tableaux Mesh::cells qui sont de taille : $width\times height\times directions\times sizeof(double)$, soit : $800*160*9*8 = 9,216,000B$ ce qui est supérieur à l'ensemble du cache L3 sur lequel perf à été exécuté, L3 : $8,192,000B$. En effet, ces deux fonctions appels \textit{Mesh\_get\_cell} qui charge en mémoire la cellule stockée dans le tableau. Ce nombre de cache-miss est naturellement élevé, mais ces fonctions peuvent tout de même être optimisée. Commençons par \textit{compute\_cell\_collision} :
 
+Elle est appelée par \textit{collision} qui charge d'abord deux cellules dans une double boucle for, suivi de ces lignes :
 
+\hspace{0.5cm} const double density = get\_cell\_density(cell\_in);
+
+\hspace{0.5cm} Vector v;
+
+\hspace{0.5cm} get\_cell\_velocity(v, cell\_in, density);
+
+\hspace{0.5cm} double v2 = get\_vect\_norm\_2(v, v);
+  
+Ces valeurs ne dépendent que de "cell\_in" et peuvent être initialisées en dehors de la double boucle. Nous faisons donc ainsi, les calculons avant l'appel à la fonction puis les passons en arguments const.
+
+Ensuite notre fonction réalise une troisième boucle sur les 9 dimensions afin d'actualiser "cell\_out" en fonction de "f\_eq" et "cell\_in", nous sortons également la déclaration de "f\_eq" des boucles for et le passons en argument, non const. Cela allège les performances notées par perf de la fonction \textit{collision} puisque nous nous assurons de réutiliser les variables deja initialisées en cache, sans avoir a allouer à allouer de nouvelles variables et donc d'évincer plus de mémoire pour chaque itération des trois boucles. Donnant par la suite :
+\begin{itemize}
+  \item[$\bullet$] \textit{global data} 824 B instructions, 16 B cache-misses
+  \item[$\bullet$] \textit{collision} comporte 52.54\% des instructions et 37.91\% des cache-misses;
+\end{itemize}
+
+prof version: 54 107 M cache-misses ; 311 945 M cache-references 
+collision :   7.08\% cache-misses   ; 8.37\% -> 14.67\$
+propagation : 11.41\% cache-misses  ; 9.79\% -> 20.21\%
+
+My version: 4 146 M cache-misses ; 50 758 M cache-references 
+collision : 11.46\% cache-misses ; 22.23\% -> 4.21\%
+propagation:33.26\% cache-misses ; 35.85\% -> 7.57\%
