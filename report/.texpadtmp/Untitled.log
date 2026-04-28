@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.10.27)  28 APR 2026 22:33
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.10.27)  28 APR 2026 22:38
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1126,14 +1126,25 @@ Underfull \hbox (badness 10000) in paragraph at lines 44--61
 File: lstlang1.sty 2024/09/23 1.10c listings language file
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
-)) (./resultats.tex) (./conclusion.tex)
+)) (./resultats.tex)
+Underfull \hbox (badness 10000) in paragraph at lines 33--196
+
+ []
+
+(./conclusion.tex
+
+[5])
 
 LaTeX Warning: Empty bibliography on input line 206.
 
 
 
-[5] (./annexes.tex
-<graphs/flame graph 1.png, id=221, 1284.8pt x 507.8975pt>
+
+
+[6
+
+] (./annexes.tex
+<graphs/flame graph 1.png, id=226, 1284.8pt x 507.8975pt>
 File: graphs/flame graph 1.png Graphic file (type png)
 <use graphs/flame graph 1.png>
 Package pdftex.def Info: graphs/flame graph 1.png  used on input line 6.
@@ -1147,7 +1158,7 @@ LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 15
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-<graphs/flame graph 2.png, id=222, 1284.8pt x 537.00626pt>
+<graphs/flame graph 2.png, id=227, 1284.8pt x 537.00626pt>
 File: graphs/flame graph 2.png Graphic file (type png)
 <use graphs/flame graph 2.png>
 Package pdftex.def Info: graphs/flame graph 2.png  used on input line 68.
@@ -1157,25 +1168,25 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[6
+[7
 
 {/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc} <./graphs/flame graph 1.png>]
-<graphs/miss-naive.png, id=279, 819.8128pt x 246.9225pt>
+<graphs/miss-naive.png, id=285, 819.8128pt x 246.9225pt>
 File: graphs/miss-naive.png Graphic file (type png)
 <use graphs/miss-naive.png>
 Package pdftex.def Info: graphs/miss-naive.png  used on input line 78.
 (pdftex.def)             Requested size: 491.89146pt x 148.15462pt.
-<graphs/ref-naive.png, id=280, 819.8128pt x 246.9225pt>
+<graphs/ref-naive.png, id=286, 819.8128pt x 246.9225pt>
 File: graphs/ref-naive.png Graphic file (type png)
 <use graphs/ref-naive.png>
 Package pdftex.def Info: graphs/ref-naive.png  used on input line 83.
 (pdftex.def)             Requested size: 491.89146pt x 148.15462pt.
-<graphs/miss-opti.png, id=281, 819.8128pt x 246.9225pt>
+<graphs/miss-opti.png, id=287, 819.8128pt x 246.9225pt>
 File: graphs/miss-opti.png Graphic file (type png)
 <use graphs/miss-opti.png>
 Package pdftex.def Info: graphs/miss-opti.png  used on input line 89.
 (pdftex.def)             Requested size: 491.89146pt x 148.15462pt.
-<graphs/ref-opti.png, id=282, 819.8128pt x 246.9225pt>
+<graphs/ref-opti.png, id=288, 819.8128pt x 246.9225pt>
 File: graphs/ref-opti.png Graphic file (type png)
 <use graphs/ref-opti.png>
 Package pdftex.def Info: graphs/ref-opti.png  used on input line 94.
@@ -1185,32 +1196,32 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[7 <./graphs/flame graph 2.png>]
+[8 <./graphs/flame graph 2.png>]
 
-[8 <./graphs/miss-naive.png> <./graphs/ref-naive.png> <./graphs/miss-opti.png> <./graphs/ref-opti.png>] (/Users/nolwendolleans/Documents/M1 CHPS/Technique_Optimisation/projet/top.lbm/top.lbm/Von-Karman-lbm-simulator/report/.texpadtmp/Untitled.aux)
+[9 <./graphs/miss-naive.png> <./graphs/ref-naive.png> <./graphs/miss-opti.png> <./graphs/ref-opti.png>] (/Users/nolwendolleans/Documents/M1 CHPS/Technique_Optimisation/projet/top.lbm/top.lbm/Von-Karman-lbm-simulator/report/.texpadtmp/Untitled.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `Untitled.out' has not changed.
-(rerunfilecheck)             Checksum: 934CEA745F787E68988259B0106FACDD;4747.
+(rerunfilecheck)             Checksum: 8B4762C19C36A13DDA3FA3B807B81471;4737.
 Package logreq Info: Writing requests to 'Untitled.run.xml'.
 \openout1 = `Untitled.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 28909 strings out of 473190
- 500492 string characters out of 5715799
- 1542508 words of memory out of 5000000
- 51434 multiletter control sequences out of 15000+600000
+ 28912 strings out of 473190
+ 500523 string characters out of 5715799
+ 1542557 words of memory out of 5000000
+ 51435 multiletter control sequences out of 15000+600000
  645438 words of font info for 181 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  69i,13n,81p,1197b,1776s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt8.pfb>
-Output written on "/Users/nolwendolleans/Documents/M1 CHPS/Technique_Optimisation/projet/top.lbm/top.lbm/Von-Karman-lbm-simulator/report/.texpadtmp/Untitled.pdf" (8 pages, 1401988 bytes).
+Output written on "/Users/nolwendolleans/Documents/M1 CHPS/Technique_Optimisation/projet/top.lbm/top.lbm/Von-Karman-lbm-simulator/report/.texpadtmp/Untitled.pdf" (9 pages, 1402968 bytes).
 PDF statistics:
- 424 PDF objects out of 1000 (max. 8388607)
- 355 compressed objects within 4 object streams
- 151 named destinations out of 1000 (max. 500000)
+ 429 PDF objects out of 1000 (max. 8388607)
+ 359 compressed objects within 4 object streams
+ 153 named destinations out of 1000 (max. 500000)
  48860 words of extra memory for PDF output out of 51595 (max. 10000000)
 

@@ -39,7 +39,7 @@ Nous mesurerons cette quantité 3 fois, puis nous analyserons la différence ave
 $$ Mlups_{final} = \sum^3_{i=1}\frac{\left|Mlups^{precedent} - Mlups^{mesure}_i \right|}{3} $$
 
 Les incertitudes seront déterminées par la déviations standard de nos valeurs mesurées.
-\subsubsection{Vérification des résultats}
+\subsection{Vérification des résultats}
 
 Afin de d'assurer la cohérence de notre modèle suite aux optimisations apportées, nous quantifierons celles-ci en analysant l'écart entre les données de référence (cf. \hyperref[tab:reference]{Table 1}) et celles mesurées.\\
 Pour ce faire, nous utiliserons le script \textit{Python} fourni qui consiste à sommer toutes les valeurs de densité $\rho$ et la norme du vecteur vitesse $U(\textbf{x},t)$ de toutes les cellules pour chaque frame calculée du jeu de donnée de référence ainsi que pour chaque frame après optimisation, avant de comparer les résultats. La solution étant déterministe, les résultats devront être identiques.\\
