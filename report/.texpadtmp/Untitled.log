@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.10.27)  28 APR 2026 22:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.10.27)  28 APR 2026 23:26
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -787,7 +787,11 @@ Package csquotes Info: Redefining alias 'default' -> 'french'.
 LaTeX Font Info:    Trying to load font information for T1+lmr on input line 143.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) (/Users/nolwendolleans/Documents/M1 CHPS/Technique_Optimisation/projet/top.lbm/top.lbm/Von-Karman-lbm-simulator/report/.texpadtmp/Untitled.aux)
+) (/Users/nolwendolleans/Documents/M1 CHPS/Technique_Optimisation/projet/top.lbm/top.lbm/Von-Karman-lbm-simulator/report/.texpadtmp/Untitled.aux
+
+LaTeX Warning: Label `fig:flamegraph1' multiply defined.
+
+)
 \openout1 = `Untitled.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 143.
@@ -962,7 +966,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 
 
 {/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
-<graphs/lbm-comm_scheme.png, id=117, 686.565pt x 426.59375pt>
+<graphs/lbm-comm_scheme.png, id=121, 686.565pt x 426.59375pt>
 File: graphs/lbm-comm_scheme.png Graphic file (type png)
 <use graphs/lbm-comm_scheme.png>
 Package pdftex.def Info: graphs/lbm-comm_scheme.png  used on input line 22.
@@ -1126,8 +1130,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 44--61
 File: lstlang1.sty 2024/09/23 1.10c listings language file
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
-)) (./resultats.tex)
-Underfull \hbox (badness 10000) in paragraph at lines 33--196
+)) (./resultats.tex
+Underfull \hbox (badness 10000) in paragraph at lines 33--35
+
+ []
+
+)
+Underfull \hbox (badness 10000) in paragraph at lines 36--196
 
  []
 
@@ -1144,7 +1153,7 @@ LaTeX Warning: Empty bibliography on input line 206.
 [6
 
 ] (./annexes.tex
-<graphs/flame graph 1.png, id=226, 1284.8pt x 507.8975pt>
+<graphs/flame graph 1.png, id=230, 1284.8pt x 507.8975pt>
 File: graphs/flame graph 1.png Graphic file (type png)
 <use graphs/flame graph 1.png>
 Package pdftex.def Info: graphs/flame graph 1.png  used on input line 6.
@@ -1158,7 +1167,7 @@ LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 15
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-<graphs/flame graph 2.png, id=227, 1284.8pt x 537.00626pt>
+<graphs/flame graph 2.png, id=231, 1284.8pt x 537.00626pt>
 File: graphs/flame graph 2.png Graphic file (type png)
 <use graphs/flame graph 2.png>
 Package pdftex.def Info: graphs/flame graph 2.png  used on input line 68.
@@ -1171,57 +1180,77 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 [7
 
 {/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc} <./graphs/flame graph 1.png>]
-<graphs/miss-naive.png, id=285, 819.8128pt x 246.9225pt>
+<graphs/miss-naive.png, id=290, 819.8128pt x 246.9225pt>
 File: graphs/miss-naive.png Graphic file (type png)
 <use graphs/miss-naive.png>
 Package pdftex.def Info: graphs/miss-naive.png  used on input line 78.
 (pdftex.def)             Requested size: 491.89146pt x 148.15462pt.
-<graphs/ref-naive.png, id=286, 819.8128pt x 246.9225pt>
+<graphs/ref-naive.png, id=291, 819.8128pt x 246.9225pt>
 File: graphs/ref-naive.png Graphic file (type png)
 <use graphs/ref-naive.png>
 Package pdftex.def Info: graphs/ref-naive.png  used on input line 83.
 (pdftex.def)             Requested size: 491.89146pt x 148.15462pt.
-<graphs/miss-opti.png, id=287, 819.8128pt x 246.9225pt>
+<graphs/miss-opti.png, id=292, 819.8128pt x 246.9225pt>
 File: graphs/miss-opti.png Graphic file (type png)
 <use graphs/miss-opti.png>
 Package pdftex.def Info: graphs/miss-opti.png  used on input line 89.
 (pdftex.def)             Requested size: 491.89146pt x 148.15462pt.
-<graphs/ref-opti.png, id=288, 819.8128pt x 246.9225pt>
+<graphs/ref-opti.png, id=293, 819.8128pt x 246.9225pt>
 File: graphs/ref-opti.png Graphic file (type png)
 <use graphs/ref-opti.png>
 Package pdftex.def Info: graphs/ref-opti.png  used on input line 94.
 (pdftex.def)             Requested size: 491.89146pt x 148.15462pt.
-)
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
 [8 <./graphs/flame graph 2.png>]
+<graphs/strong_scaling.png, id=300, 578.16pt x 361.35pt>
+File: graphs/strong_scaling.png Graphic file (type png)
+<use graphs/strong_scaling.png>
+Package pdftex.def Info: graphs/strong_scaling.png  used on input line 104.
+(pdftex.def)             Requested size: 520.33919pt x 325.21199pt.
 
-[9 <./graphs/miss-naive.png> <./graphs/ref-naive.png> <./graphs/miss-opti.png> <./graphs/ref-opti.png>] (/Users/nolwendolleans/Documents/M1 CHPS/Technique_Optimisation/projet/top.lbm/top.lbm/Von-Karman-lbm-simulator/report/.texpadtmp/Untitled.aux)
+Overfull \hbox (2.49867pt too wide) in paragraph at lines 104--106
+ [][] 
+ []
+
+)
+Underfull \vbox (badness 5504) has occurred while \output is active []
+
+
+
+[9 <./graphs/miss-naive.png> <./graphs/ref-naive.png> <./graphs/miss-opti.png> <./graphs/ref-opti.png>]
+
+[10 <./graphs/strong_scaling.png>] (/Users/nolwendolleans/Documents/M1 CHPS/Technique_Optimisation/projet/top.lbm/top.lbm/Von-Karman-lbm-simulator/report/.texpadtmp/Untitled.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
+
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package rerunfilecheck Info: File `Untitled.out' has not changed.
-(rerunfilecheck)             Checksum: 8B4762C19C36A13DDA3FA3B807B81471;4737.
+(rerunfilecheck)             Checksum: B35E0AE3AC1FC4C718E2A5D795081608;5013.
 Package logreq Info: Writing requests to 'Untitled.run.xml'.
 \openout1 = `Untitled.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 28912 strings out of 473190
- 500523 string characters out of 5715799
- 1542557 words of memory out of 5000000
- 51435 multiletter control sequences out of 15000+600000
+ 28923 strings out of 473190
+ 500791 string characters out of 5715799
+ 1542609 words of memory out of 5000000
+ 51443 multiletter control sequences out of 15000+600000
  645438 words of font info for 181 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,13n,81p,1197b,1776s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 69i,13n,81p,1197b,1778s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt8.pfb>
-Output written on "/Users/nolwendolleans/Documents/M1 CHPS/Technique_Optimisation/projet/top.lbm/top.lbm/Von-Karman-lbm-simulator/report/.texpadtmp/Untitled.pdf" (9 pages, 1402968 bytes).
+Output written on "/Users/nolwendolleans/Documents/M1 CHPS/Technique_Optimisation/projet/top.lbm/top.lbm/Von-Karman-lbm-simulator/report/.texpadtmp/Untitled.pdf" (10 pages, 1447832 bytes).
 PDF statistics:
- 429 PDF objects out of 1000 (max. 8388607)
- 359 compressed objects within 4 object streams
- 153 named destinations out of 1000 (max. 500000)
- 48860 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 440 PDF objects out of 1000 (max. 8388607)
+ 367 compressed objects within 4 object streams
+ 156 named destinations out of 1000 (max. 500000)
+ 48873 words of extra memory for PDF output out of 51595 (max. 10000000)
 
