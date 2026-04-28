@@ -2,6 +2,28 @@
 
 Notre approche pour vérifier les optimisations que nous ferons est la suivante: pour chaque optimisation, nous mesurerons la variation de fréquence de mise à jour des cellules (en MLUPS) et vérifierons que les résultats restent vrais en les comparant avec une référence.\\
 
+Toutes les mesures ont été fait sur la configuration système suivante:\\
+Chip: Apple M4\\
+Total Number of Cores: 10 (4 Performance and 6 Efficiency)\\
+Memory: 16 GB\\
+Page Size: 16 KB\\
+
+Cores Performance:\\
+Frequency: 4,4 GHz \\
+L1i: 192 KB\\
+L1d: 128 KB\\
+L2: 16 MB\\
+
+Cores Efficiency:\\
+Frequency: 2,9 GHz\\
+L1i: 128 KB\\
+L1d: 64 KB\\
+L2: 4 MB\\
+
+Compiler:\\
+g++: 15.0.2\\
+
+
 
 \subsubsection{Mesure du nombre d'opérations par secondes}
 
